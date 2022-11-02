@@ -1,0 +1,212 @@
+version: '3.8'
+services:
+  pine-sonarqube-db:
+    image: postgres
+    container_name: pine-sonarqube-db
+    hostname: pine-sonarqube-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${SONAR_DB}
+      POSTGRES_USER: ${SONAR_DB_USER}
+      POSTGRES_PASSWORD: ${SONAR_DB_PASSWORD}
+    ports:
+      - "5051:5432"
+    volumes:
+      - ~/docker_compose/sonarqube-postgresql:/var/lib/postgresql
+    ulimits:
+      nproc: 262144
+      nofile:
+        soft: 32000
+        hard: 40000
+  pine-jfrog-db:
+    image: postgres
+    container_name: pine-jfrog-db
+    hostname: pine-jfrog-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${JFROG_DB}
+      POSTGRES_USER: ${JFROG_DB_USER}
+      POSTGRES_PASSWORD: ${JFROG_DB_PASSWORD}
+    ports:
+      - "5052:5432"
+    volumes:
+      - ~/docker_compose/jfrog-postgresql:/var/lib/postgresql
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  pine-concourse-db:
+    container_name: pine-concourse-db
+    hostname: pine-concourse-db
+    restart: always
+    image: postgres
+    environment:
+      POSTGRES_DB: ${CONCOURSE_DB}
+      POSTGRES_PASSWORD: ${CONCOURSE_DB_PASSWORD}
+      POSTGRES_USER: ${CONCOURSE_DB_USER}
+      PGDATA: /database
+    ports:
+      - "5053:5432"
+    volumes:
+      - ~/docker_compose/concourse-postgresql:/var/lib/postgresql
+    ulimits:
+      nproc: 262144
+      nofile:
+        soft: 32000
+        hard: 40000
+  pine-jenkins:
+    container_name: pine-jenkins
+    hostname: pine-jenkins
+    restart: always
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    environment:
+      GITHUB_EMAIL: ${GITHUB_EMAIL}
+      GITHUB_USERNAME: ${GITHUB_USERNAME}
+      GITHUB_SECRET: ${GITHUB_JENKINS_TOKEN}
+      GITHUB_URL: ${GITHUB_ARTIFACTORY_URL}
+      APP_PORT: 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/docker_compose/jenkins:/home/jenkins/.jenkins
+    deploy:
+      resources:
+        limits:
+          memory: '1024M'
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  # wsl -d docker-desktop
+  # sysctl -w vm.max_map_count=262144
+  # set vm.max_map_count=262144 in /etc/sysctl.conf then execute sysctl -p
+  pine-sonarqube:
+    image: sonarqube:community
+    container_name: pine-sonarqube
+    hostname: pine-sonarqube
+    privileged: true
+    user: root
+    restart: always
+    environment:
+      SONAR_JDBC_URL: ${SONAR_JDBC_URL}
+      SONAR_JDBC_USERNAME: ${SONAR_DB_USER}
+      SONAR_JDBC_PASSWORD: ${SONAR_DB_PASSWORD}
+      SONAR_SEARCH_JAVAADDITIONALOPTS: "-Dbootstrap.system_call_filter=false"
+    ports:
+      - "9000:9000"
+    volumes:
+      - ~/docker_compose/sonarqube/sonarqube_data:/opt/sonarqube/data
+      - ~/docker_compose/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
+      - ~/docker_compose/sonarqube/sonarqube_logs:/opt/sonarqube/logs
+    depends_on:
+      - pine-sonarqube-db
+    links:
+      - pine-sonarqube-db
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  pine-jfrog:
+    image: docker.bintray.io/jfrog/artifactory-oss
+    container_name: pine-jfrog
+    hostname: pine-jfrog
+    restart: always
+    environment:
+      JF_SHARED_DATABASE_TYPE: ${JF_SHARED_DATABASE_TYPE}
+      JF_SHARED_DATABASE_DRIVER: ${JF_SHARED_DATABASE_DRIVER}
+      JF_SHARED_DATABASE_URL: ${JF_SHARED_DATABASE_URL}
+      JF_SHARED_DATABASE_USERNAME: ${JFROG_DB_USER}
+      JF_SHARED_DATABASE_PASSWORD: ${JFROG_DB_PASSWORD}
+    ports:
+      - "8082:8082"
+      - "8081:8081"
+    depends_on:
+      - pine-jfrog-db
+    links:
+      - pine-jfrog-db
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  pine-nexus:
+    container_name: pine-nexus
+    hostname: pine-nexus
+    restart: always
+    build:
+      context: ./nexus
+      dockerfile: Dockerfile
+    environment:
+      APP_PORT: 8081
+    ports:
+      - "8084:8081"
+    volumes:
+      - ~/docker_compose/nexus:/opt/sonatype/sonatype-work/nexus3
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  pine-concourse-web:
+    image: concourse/concourse
+    container_name: pine-concourse-web
+    hostname: pine-concourse-web
+    restart: always
+    command: web
+    privileged: true
+    depends_on: [ pine-concourse-db ]
+    ports: [ "8083:8080" ]
+    volumes:
+      - ~/docker_compose/concourse/keys:/keys
+    environment:
+      CONCOURSE_POSTGRES_HOST: ${CONCOURSE_DB_HOST}
+      CONCOURSE_POSTGRES_PORT: ${CONCOURSE_DB_PORT}
+      CONCOURSE_POSTGRES_DATABASE: ${CONCOURSE_DB}
+      CONCOURSE_POSTGRES_USER: ${CONCOURSE_DB_USER}
+      CONCOURSE_POSTGRES_PASSWORD: ${CONCOURSE_DB_PASSWORD}
+      CONCOURSE_ADD_LOCAL_USER: ${CONCOURSE_ADD_LOCAL_USER}:${CONCOURSE_ADD_LOCAL_PASSWORD}
+      CONCOURSE_MAIN_TEAM_LOCAL_USER: ${CONCOURSE_MAIN_TEAM_LOCAL_USER}
+      CONCOURSE_EXTERNAL_URL: ${CONCOURSE_EXTERNAL_URL}
+      CONCOURSE_CLUSTER_NAME: ${CONCOURSE_CLUSTER_NAME}
+      CONCOURSE_SESSION_SIGNING_KEY: /keys/session_signing_key
+      CONCOURSE_TSA_HOST_KEY: /keys/tsa_host_key
+      CONCOURSE_TSA_AUTHORIZED_KEYS: ./keys/authorized_worker_keys
+  pine-concourse-worker:
+    image: concourse/concourse
+    container_name: pine-concourse-worker
+    hostname: pine-concourse-worker
+    restart: always
+    command: worker
+    privileged: true
+    depends_on: [ pine-concourse-web ]
+    volumes:
+      - ~/docker_compose/concourse/keys:/keys
+    environment:
+      CONCOURSE_WORK_DIR: /var/lib/concourse
+      CONCOURSE_TSA_HOST: ${CONCOURSE_TSA_HOST}
+      CONCOURSE_TSA_PUBLIC_KEY: /keys/tsa_host_key.pub
+      CONCOURSE_TSA_WORKER_PRIVATE_KEY: /keys/worker_key
+      CONCOURSE_CONTAINERD_DNS_PROXY_ENABLE: "true"
+      CONCOURSE_CONTAINERD_DNS_SERVER: "1.1.1.1,8.8.8.8"
+      CONCOURSE_RUNTIME: "containerd"
+      CONCOURSE_BAGGAGECLAIM_DRIVER: "naive"

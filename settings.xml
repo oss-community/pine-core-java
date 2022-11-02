@@ -1,0 +1,41 @@
+<settings>
+    <pluginGroups>
+        <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+        <pluginGroup>org.asciidoctor</pluginGroup>
+        <pluginGroup>com.github.jeluard</pluginGroup>
+    </pluginGroups>
+    <profiles>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                </repository>
+                <repository>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/${env.GITHUB_ARTIFACTORY_URL}</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <servers>
+        <server>
+            <id>github</id>
+            <username>${env.GITHUB_USERNAME}</username>
+            <password>${env.GITHUB_PACKAGE_TOKEN}</password>
+        </server>
+        <server>
+            <id>nexus-snapshots</id>
+            <username>${env.NEXUS_ARTIFACTORY_USERNAME}</username>
+            <password>${env.NEXUS_ARTIFACTORY_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>

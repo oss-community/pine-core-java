@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2022 Saman Alishirishahrbabak. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>pine-core-java</artifactId>
+        <groupId>com.pineframework.core</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <groupId>com.pineframework.core</groupId>
+    <artifactId>helper</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Helper</name>
+    <description>
+        Helper component is included helpers and utilities class.
+    </description>
+    <developers>
+        <developer>
+            <name>Saman Alishirishahrbabak</name>
+            <email>samanalishiri@gmail.com</email>
+            <url>${scm.base-url.https}/</url>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>${source.repository.url}/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>Notice</name>
+            <url>${source.repository.url}/blob/main/NOTICE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <issueManagement>
+        <url>${scm.base-url.https}/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+    <properties>
+        <ojdbc.version>21c</ojdbc.version>
+        <h2.version>2.1.214</h2.version>
+    </properties>
+    <dependencies>
+        <!--jdbc driver begin-->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <version>${ojdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+        <!--jdbc driver end-->
+        <!--internationalization begin-->
+        <dependency>
+            <groupId>com.pineframework.core</groupId>
+            <artifactId>i18n</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>71.1</version>
+        </dependency>
+        <!--internationalization end-->
+        <!--utility begin-->
+        <dependency>
+            <groupId>net.jodah</groupId>
+            <artifactId>typetools</artifactId>
+            <version>0.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--utility end-->
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <excludedScopes>test</excludedScopes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-licenses</id>
+                        <goals>
+                            <goal>aggregate-download-licenses</goal>
+                        </goals>
+                        <configuration>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.oracle</groupId>
+                            <artifactId>ojdbc11</artifactId>
+                            <version>21c</version>
+                            <packaging>jar</packaging>
+                            <file>${project.parent.basedir}${file.separator}driver/ojdbc11.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
