@@ -1,4 +1,6 @@
-echo # credentials > ./ci/concourse/credentials.yml
+#!/bin/bash
+
+echo "# credentials" > ./ci/concourse/credentials.yml
 echo github-user-name: $GITHUB_USERNAME >> ./ci/concourse/credentials.yml
 echo github-user-email: $GITHUB_EMAIL >> ./ci/concourse/credentials.yml
 echo github-package-token: $GITHUB_PACKAGE_TOKEN >> ./ci/concourse/credentials.yml

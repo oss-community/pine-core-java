@@ -75,8 +75,8 @@ limitations under the License.
         <url>${scm.base-url.https}/issues</url>
     </issueManagement>
     <scm>
-        <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
-        <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
+        <connection>scm:git:git://github.com/oss-community/pine-core-java.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
         <tag>HEAD</tag>
     </scm>
@@ -84,6 +84,7 @@ limitations under the License.
         <module>helper</module>
         <module>document</module>
         <module>i18n</module>
+        <module>data-model</module>
     </modules>
     <dependencies>
         <!--JEE begin-->

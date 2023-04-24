@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "export GITHUB_USERNAME=samanalishiri" >> ${HOME}/.bashrc
 echo "export GITHUB_EMAIL=samanalishiri@gmail.com" >> ${HOME}/.bashrc
 echo "export GITHUB_JENKINS_TOKEN=not_generated" >> ${HOME}/.bashrc

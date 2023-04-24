@@ -1,3 +1,6 @@
+#!/bin/bash
+# install sonarqube, jfrog, nexus and setup github for maven site
+
 clear
 
 echo 'step [validate] begin'

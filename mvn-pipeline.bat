@@ -1,12 +1,4 @@
-# install sonarqube, jfrog and setup github for maven site
-# call set SONAR_TOKEN=
-# call set SONAR_URL=http://localhost:9000
-#
-# call set JFROG_ARTIFACTORY_USERNAME=admin
-# call set JFROG_ARTIFACTORY_PASSWORD=
-# call set JFROG_ARTIFACTORY_SNAPSHOT_URL=http://localhost:8081/artifactory/pine-libs-snapshot
-# call set JFROG_ARTIFACTORY_CONTEXT_URL=http://localhost:8082/artifactory
-# call set JFROG_ARTIFACTORY_REPOSITORY_PREFIX=pine
+# install sonarqube, jfrog, nexus and setup github for maven site
 
 cls
 call echo 'step [validate] begin'

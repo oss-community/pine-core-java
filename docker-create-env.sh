@@ -1,8 +1,11 @@
-echo GITHUB_USERNAME=$GITHUB_JENKINS_TOKEN > ./docker/.env
-echo GITHUB_EMAIL=$GITHUB_JENKINS_TOKEN > ./docker/.env
-echo GITHUB_JENKINS_TOKEN=$GITHUB_JENKINS_TOKEN > ./docker/.env
-echo GITHUB_PACKAGE_TOKEN=$GITHUB_JENKINS_TOKEN > ./docker/.env
-echo GITHUB_ARTIFACTORY_URL=$GITHUB_ARTIFACTORY_URL > ./docker/.env
+#!/bin/bash
+
+echo "#ENV" > ./docker/.env
+echo GITHUB_USERNAME=$GITHUB_JENKINS_TOKEN >> ./docker/.env
+echo GITHUB_EMAIL=$GITHUB_JENKINS_TOKEN >> ./docker/.env
+echo GITHUB_JENKINS_TOKEN=$GITHUB_JENKINS_TOKEN >> ./docker/.env
+echo GITHUB_PACKAGE_TOKEN=$GITHUB_JENKINS_TOKEN >> ./docker/.env
+echo GITHUB_ARTIFACTORY_URL=$GITHUB_ARTIFACTORY_URL >> ./docker/.env
 
 echo SONAR_DB=$SONAR_DB >> ./docker/.env
 echo SONAR_DB_USER=$SONAR_DB_USER >> ./docker/.env

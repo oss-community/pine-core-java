@@ -1,3 +1,5 @@
+#!/bin/bash
+
 clear
 echo 'step [validate] begin'
 mvn validate
@@ -21,5 +23,5 @@ echo 'step [install] end'
 
 echo 'step [site] begin'
 mvn site:site site:stage -s settings.xml -P site,javadoc,changelog,test-report,github
-call mvn site:run -s settings.xml -P site
+mvn site:run -s settings.xml -P site
 echo 'step [site] end'
