@@ -1,5 +1,5 @@
 FROM openjdk:8-alpine
-MAINTAINER samanalishiri@gmail.com
+LABEL maintainer="samanalishiri@gmail.com"
 
 RUN apk --no-cache add ca-certificates wget shadow
 

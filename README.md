@@ -1,3 +1,12 @@
+```shell
+docker build -t samanalishiri/jenkins:latest ./docker/jenkins/ --no-cache
+```
+
+```shell
+docker compose --file .\docker\docker-compose.yml --project-name pine-pipeline --env-file .\docker\.env up --build -d
+```
+
+
 # <p align="center">Pine Core Framework</p>
 
 <p align="justify">

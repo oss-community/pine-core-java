@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "#ENV" > ./docker/.env
 echo GITHUB_USERNAME=$GITHUB_JENKINS_TOKEN >> ./docker/.env
 echo GITHUB_EMAIL=$GITHUB_JENKINS_TOKEN >> ./docker/.env
 echo GITHUB_JENKINS_TOKEN=$GITHUB_JENKINS_TOKEN >> ./docker/.env
