@@ -32,3 +32,5 @@ target
 .DS_Store
 
 ci/concourse/credentials.yml
+ci/docker_compose
+ci/keys

@@ -1,12 +1,3 @@
-```shell
-docker build -t samanalishiri/jenkins:latest ./docker/jenkins/ --no-cache
-```
-
-```shell
-docker compose --file .\docker\docker-compose.yml --project-name pine-pipeline --env-file .\docker\.env up --build -d
-```
-
-
 # <p align="center">Pine Core Framework</p>
 
 <p align="justify">
@@ -975,6 +966,456 @@ CONCOURSE_MAIN_TEAM_LOCAL_USER=pine
 CONCOURSE_TSA_HOST=pine-concourse-web:2222
 ```
 
+```shell
+docker build -t samanalishiri/jenkins:latest ./docker/jenkins/ --no-cache
+```
+
+```shell
+./docker-pre-config.sh
+./docker-create-env.sh
+./concourse-generate-credentials.sh
+
+docker compose --file docker-compose.yml --project-name pine-pipeline --env-file .env up --build -d
+```
+
+```shell
+# default username: admin
+# default password: admin
+# Login and change the default password to 'password'
+# Get Sonar token
+SONAR_URL=http://localhost:9000
+SONAR_USERNAME=admin
+SONAR_PASSWORD=password
+SONAR_TOKEN=$(curl -u $SONAR_USERNAME:$SONAR_PASSWORD -X POST "$SONAR_URL/api/user_tokens/generate" -d "name=admin")
+echo $SONAR_TOKEN | jq
+```
+
+```shell
+# default username: admin
+# default password: admin
+# Login and keep the default password as 'password'
+# Get JFrog password
+ARTIFACTORY_URL=http://localhost:8082/artifactory
+REPO_KEY=pine
+JFROG_USERNAME=admin
+JFROG_PASSWORD=password
+JFROG_ENC_PASSWORD=$(curl -u $JFROG_USERNAME:$JFROG_PASSWORD -X GET "$ARTIFACTORY_URL/api/security/encryptedPassword")
+echo JFROG_ENC_PASSWORD
+
+```
+
+```shell
+# Get Nexus password
+NEXUS_PASSWORD=$(cat ./ci/docker_compose/nexus/admin.password)
+echo $NEXUS_PASSWORD
+# Login and change the  default password to 'password'
+```
+
+```shell
+# Create Repository
+NEXUS_URL="http://localhost:8084"
+USERNAME="admin"
+PASSWORD="password"
+REPO_NAME="pine"
+curl -u $USERNAME:$PASSWORD -X POST "$NEXUS_URL/service/rest/v1/repositories/maven/hosted" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "'"$REPO_NAME"'",
+  "online": true,
+  "storage": {
+    "blobStoreName": "default",
+    "strictContentTypeValidation": true,
+    "writePolicy": "allow_once"
+  },
+  "maven": {
+    "versionPolicy": "MIXED",
+    "layoutPolicy": "STRICT"
+  }
+}'
+
+curl -u $USERNAME:$PASSWORD -X GET "$NEXUS_URL/service/rest/v1/repositories/$REPO_NAME"
+
+```
+
+```shell
+# Get Jenkins password 
+JENKINS_PASSWORD=$(cat ./ci/docker_compose/jenkins/secrets/initialAdminPassword)
+echo $JENKINS_PASSWORD
+# Login and change the  default password to 'password'
+```
+
+```shell
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_PASSWORD=password
+curl  -s -u $JENKINS_USER:$JENKINS_PASSWORD -X GET "$JENKINS_URL/credentials/store/system/domain/_/api/json?depth=1" | jq
+```
+
+```shell
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_PASSWORD=password
+
+curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq
+```
+
+```shell
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+curl -s -u $JENKINS_USER:$JENKINS_PASSWORD -H "Jenkins-Crumb:$CRUMB" -X POST "$JENKINS_URL/me/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?newTokenName=admin_token" | jq
+```
+
+```shell
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+API_TOKEN=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD -H "Jenkins-Crumb:$CRUMB" -X POST "$JENKINS_URL/me/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?newTokenName=admin_token" | jq -r '.data.tokenValue' | tr -d '\r')
+```
+
+```shell
+GITHUB_USERNAME=samanalishiri
+GITHUB_EMAIL=samanalishiri@gmail.com
+GITHUB_JENKINS_TOKEN=not_generated
+GITHUB_PACKAGE_TOKEN=not_generated
+GITHUB_ARTIFACTORY_URL=oss-community/pine-core-java
+SONAR_TOKEN=not_generated
+SONAR_URL=http://pine-sonarqube:9000
+JFROG_ARTIFACTORY_USERNAME=admin
+JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD=not_generated
+JFROG_ARTIFACTORY_SNAPSHOT_URL=http://pine-jfrog:8081/artifactory/pine-libs-snapshot
+JFROG_ARTIFACTORY_RELEASE_URL=http://pine-jfrog:8081/artifactory/pine-libs-release
+JFROG_ARTIFACTORY_CONTEXT_URL=http://pine-jfrog:8082/artifactory
+JFROG_ARTIFACTORY_REPOSITORY_PREFIX=pine
+NEXUS_ARTIFACTORY_USERNAME=admin
+NEXUS_ARTIFACTORY_PASSWORD=not_generated
+NEXUS_ARTIFACTORY_HOST_URL=http://pine-nexus:8081/
+NEXUS_ARTIFACTORY_SNAPSHOT_URL=http://pine-nexus:8081/repository/pine-maven-snapshots/
+NEXUS_ARTIFACTORY_RELEASE_URL=http://pine-nexus:8081/repository/pine-maven-releases/
+
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "GITHUB_USERNAME",
+            "secret": "'"$GITHUB_USERNAME"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "GITHUB_EMAIL",
+            "secret": "'"$GITHUB_EMAIL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "GITHUB_JENKINS_TOKEN",
+            "secret": "'"$GITHUB_JENKINS_TOKEN"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "GITHUB_PACKAGE_TOKEN",
+            "secret": "'"$GITHUB_PACKAGE_TOKEN"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "GITHUB_ARTIFACTORY_URL",
+            "secret": "'"$GITHUB_ARTIFACTORY_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "SONAR_TOKEN",
+            "secret": "'"$SONAR_TOKEN"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "SONAR_URL",
+            "secret": "'"$SONAR_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "JFROG_ARTIFACTORY_USERNAME",
+            "secret": "'"$JFROG_ARTIFACTORY_USERNAME"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD",
+            "secret": "'"$JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "JFROG_ARTIFACTORY_SNAPSHOT_URL",
+            "secret": "'"$JFROG_ARTIFACTORY_SNAPSHOT_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "JFROG_ARTIFACTORY_RELEASE_URL",
+            "secret": "'"$JFROG_ARTIFACTORY_RELEASE_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "JFROG_ARTIFACTORY_CONTEXT_URL",
+            "secret": "'"$JFROG_ARTIFACTORY_CONTEXT_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "JFROG_ARTIFACTORY_REPOSITORY_PREFIX",
+            "secret": "'"$JFROG_ARTIFACTORY_REPOSITORY_PREFIX"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "NEXUS_ARTIFACTORY_USERNAME",
+            "secret": "'"$NEXUS_ARTIFACTORY_USERNAME"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "NEXUS_ARTIFACTORY_PASSWORD",
+            "secret": "'"$NEXUS_ARTIFACTORY_PASSWORD"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "NEXUS_ARTIFACTORY_HOST_URL",
+            "secret": "'"$NEXUS_ARTIFACTORY_HOST_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "NEXUS_ARTIFACTORY_SNAPSHOT_URL",
+            "secret": "'"$NEXUS_ARTIFACTORY_SNAPSHOT_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -H "Jenkins-Crumb:$CRUMB" \
+    --data-urlencode 'json={
+        "credentials": {
+            "scope": "GLOBAL",
+            "id": "NEXUS_ARTIFACTORY_RELEASE_URL",
+            "secret": "'"$NEXUS_ARTIFACTORY_RELEASE_URL"'",
+            "description": "Added via Rest API",
+            "$class": "org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl"
+        }
+    }'
+
+```
+
+```shell
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
+
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_USERNAME/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_EMAIL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_JENKINS_TOKEN/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_PACKAGE_TOKEN/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_ARTIFACTORY_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/SONAR_TOKEN/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/SONAR_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_USERNAME/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_SNAPSHOT_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_RELEASE_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_CONTEXT_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_REPOSITORY_PREFIX/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_USERNAME/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_PASSWORD/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_HOST_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_SNAPSHOT_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_RELEASE_URL/doDelete" \
+  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -H "Jenkins-Crumb:$CRUMB"
+
+```
+
 Then executed `pipeline-install` file that located in root path of project.
 
 #### Windows
@@ -1007,7 +1448,7 @@ Go to the Sonar console `http://localhost:9000` and follow the instruction [Sona
 Go to the JFrog console `http://localhost:8082/ui` and follow the instruction [JFrog](#JFrog) to get encrypted password.
 And create repositories with pine as a prefix.
 <br/>
-Go to the Nexus console `http://localhost:8084` and add create two repositories named `pine-maven-snapshots` and 
+Go to the Nexus console `http://localhost:8084` and add create two repositories named `pine-maven-snapshots` and
 `pine-maven-releases`.
 <br/>
 Go to the Jenkins console `http://localhost:8080` and add the following secret variables to invoke by `credentials()`.

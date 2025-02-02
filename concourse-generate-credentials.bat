@@ -1,4 +1,4 @@
-echo "# credentials" > .\ci\concourse\credentials.yml
+echo #credentials > .\ci\concourse\credentials.yml
 
 echo github-username: %GITHUB_USERNAME% >> .\ci\concourse\credentials.yml
 echo github-email: %GITHUB_EMAIL% >> .\ci\concourse\credentials.yml

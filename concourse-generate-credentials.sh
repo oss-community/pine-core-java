@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "# credentials" > ./ci/concourse/credentials.yml
+echo "#credentials" > ./ci/concourse/credentials.yml
 echo github-user-name: $GITHUB_USERNAME >> ./ci/concourse/credentials.yml
 echo github-user-email: $GITHUB_EMAIL >> ./ci/concourse/credentials.yml
 echo github-package-token: $GITHUB_PACKAGE_TOKEN >> ./ci/concourse/credentials.yml
@@ -25,15 +25,15 @@ echo sonar-url: $SONAR_URL >> ./ci/concourse/credentials.yml
 echo github-key-pub: >> ./ci/concourse/credentials.yml
 echo github-key: '|' >> ./ci/concourse/credentials.yml
 
-mkdir ~/pine/keys ~/docker_compose
+mkdir -p ./ci/keys ./ci/docker_compose
 
-ssh-keygen -t rsa -C "concourse_team" -f ~/pine/keys/pipeline_pine
-gh repo deploy-key add %HOMEPATH%/pine/keys/pipeline_pine.pub -R %GITHUB_ARTIFACTORY_URL% -t concourse_team-key-pub -w
+ssh-keygen -t rsa -C "concourse_team" -f ./ci/keys/pipeline_pine
+gh repo deploy-key add ./ci/keys/pipeline_pine.pub -R $GITHUB_ARTIFACTORY_URL -t concourse_team-key-pub -w
 
-ssh-keygen -t rsa -b 4096 -m PEM -f ~/pine/keys/session_signing_key
-ssh-keygen -t rsa -b 4096 -m PEM -f ~/pine/keys/tsa_host_key
-ssh-keygen -t rsa -b 4096 -m PEM -f ~/pine/keys/worker_key
+ssh-keygen -t rsa -b 4096 -m PEM -f ./ci/keys/session_signing_key
+ssh-keygen -t rsa -b 4096 -m PEM -f ./ci/keys/tsa_host_key
+ssh-keygen -t rsa -b 4096 -m PEM -f ./ci/keys/worker_key
 
-mv ~/pine/keys/worker_key.pub ~/pine/keys/authorized_worker_keys
-cp ~/pine/keys/* ~/docker_compose/concourse/keys
+mv ./ci/keys/worker_key.pub ./ci/keys/authorized_worker_keys
+#cp ./ci/keys/* ./ci/docker_compose/concourse/keys
 

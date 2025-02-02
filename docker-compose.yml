@@ -1,4 +1,4 @@
-version: '3.9'
+name: dev-env
 services:
   pine-sonarqube-db:
     image: postgres
@@ -12,7 +12,7 @@ services:
     ports:
       - "5051:5432"
     volumes:
-      - ~/docker_compose/sonarqube-postgresql:/var/lib/postgresql
+      - ./ci/docker_compose/sonarqube-postgresql:/var/lib/postgresql
     ulimits:
       nproc: 262144
       nofile:
@@ -30,7 +30,7 @@ services:
     ports:
       - "5052:5432"
     volumes:
-      - ~/docker_compose/jfrog-postgresql:/var/lib/postgresql
+      - ./ci/docker_compose/jfrog-postgresql:/var/lib/postgresql
     ulimits:
       nproc: 262144
       memlock:
@@ -52,7 +52,7 @@ services:
     ports:
       - "5053:5432"
     volumes:
-      - ~/docker_compose/concourse-postgresql:/var/lib/postgresql
+      - ./ci/docker_compose/concourse-postgresql:/var/lib/postgresql
     ulimits:
       nproc: 262144
       nofile:
@@ -63,7 +63,7 @@ services:
     hostname: pine-jenkins
     restart: always
     build:
-      context: ./jenkins
+      context: docker/jenkins
       dockerfile: Dockerfile
     environment:
       GITHUB_EMAIL: ${GITHUB_EMAIL}
@@ -74,7 +74,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ~/docker_compose/jenkins:/home/jenkins/.jenkins
+      - ./ci/docker_compose/jenkins:/home/jenkins/.jenkins
     deploy:
       resources:
         limits:
@@ -104,9 +104,9 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ~/docker_compose/sonarqube/sonarqube_data:/opt/sonarqube/data
-      - ~/docker_compose/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
-      - ~/docker_compose/sonarqube/sonarqube_logs:/opt/sonarqube/logs
+      - ./ci/docker_compose/sonarqube/sonarqube_data:/opt/sonarqube/data
+      - ./ci/docker_compose/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
+      - ./ci/docker_compose/sonarqube/sonarqube_logs:/opt/sonarqube/logs
     depends_on:
       - pine-sonarqube-db
     links:
@@ -146,18 +146,14 @@ services:
         soft: 65536
         hard: 65536
   pine-nexus:
+    image: sonatype/nexus3:latest
     container_name: pine-nexus
     hostname: pine-nexus
     restart: always
-    build:
-      context: ./nexus
-      dockerfile: Dockerfile
-    environment:
-      APP_PORT: 8081
     ports:
       - "8084:8081"
     volumes:
-      - ~/docker_compose/nexus:/opt/sonatype/sonatype-work/nexus3
+      - ./ci/docker_compose/nexus:/opt/sonatype/sonatype-work/nexus3
     ulimits:
       nproc: 262144
       memlock:
@@ -176,7 +172,7 @@ services:
     depends_on: [ pine-concourse-db ]
     ports: [ "8083:8080" ]
     volumes:
-      - ~/docker_compose/concourse/keys:/keys
+      - ./ci/keys:/keys
     environment:
       CONCOURSE_POSTGRES_HOST: ${CONCOURSE_DB_HOST}
       CONCOURSE_POSTGRES_PORT: ${CONCOURSE_DB_PORT}
@@ -199,7 +195,7 @@ services:
     privileged: true
     depends_on: [ pine-concourse-web ]
     volumes:
-      - ~/docker_compose/concourse/keys:/keys
+      - ./ci/keys:/keys
     environment:
       CONCOURSE_WORK_DIR: /var/lib/concourse
       CONCOURSE_TSA_HOST: ${CONCOURSE_TSA_HOST}

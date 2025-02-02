@@ -9,4 +9,4 @@
 ./docker-build-image-nexus.sh
 ./docker-build-image-pinealpine.sh
 
-docker-compose --file ./docker/docker-compose.yml --project-name pine-pipeline --env-file ./docker/.env up --build -d
+docker-compose --file docker-compose.yml --project-name pine-pipeline --env-file .env up --build -d
