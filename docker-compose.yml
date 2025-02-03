@@ -68,7 +68,7 @@ services:
     environment:
       GITHUB_EMAIL: ${GITHUB_EMAIL}
       GITHUB_USERNAME: ${GITHUB_USERNAME}
-      GITHUB_SECRET: ${GITHUB_JENKINS_TOKEN}
+      GITHUB_JENKINS_TOKEN: ${GITHUB_JENKINS_TOKEN}
       GITHUB_URL: ${GITHUB_ARTIFACTORY_URL}
       APP_PORT: 8080
     ports:
@@ -172,7 +172,7 @@ services:
     depends_on: [ pine-concourse-db ]
     ports: [ "8083:8080" ]
     volumes:
-      - ./ci/keys:/keys
+      - ./ci/concourse/keys:/keys
     environment:
       CONCOURSE_POSTGRES_HOST: ${CONCOURSE_DB_HOST}
       CONCOURSE_POSTGRES_PORT: ${CONCOURSE_DB_PORT}
@@ -195,7 +195,7 @@ services:
     privileged: true
     depends_on: [ pine-concourse-web ]
     volumes:
-      - ./ci/keys:/keys
+      - ./ci/concourse/keys:/keys
     environment:
       CONCOURSE_WORK_DIR: /var/lib/concourse
       CONCOURSE_TSA_HOST: ${CONCOURSE_TSA_HOST}

@@ -33,4 +33,5 @@ target
 
 ci/concourse/credentials.yml
 ci/docker_compose
-ci/keys
+ci/concourse/keys
+githubtoken

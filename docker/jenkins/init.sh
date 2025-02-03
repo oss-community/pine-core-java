@@ -7,8 +7,8 @@ eval "$(ssh-agent -s)" && ssh-add $HOME/.ssh/id_rsa
 echo "Host *" >> $HOME/.ssh/config
 echo "    StrictHostKeyChecking no" >> $HOME/.ssh/config
 
-if [ $GITHUB_SECRET != "empty" ]; then
-  echo $GITHUB_SECRET > $HOME/.githubtoken
+if [ $GITHUB_JENKINS_TOKEN != "empty" ]; then
+  echo $GITHUB_JENKINS_TOKEN > $HOME/.githubtoken
   gh auth login -p ssh -h github.com --with-token < $HOME/.githubtoken
   gh repo deploy-key add $HOME/.ssh/id_rsa.pub -R $GITHUB_URL -t jenkins-key-pub -w
 fi

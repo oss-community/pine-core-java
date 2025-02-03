@@ -1,1 +1,0 @@
-fly --target pine login --team-name main --concourse-url http://localhost:8083 -u pine -p pine

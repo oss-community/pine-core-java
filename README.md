@@ -918,11 +918,22 @@ To begin, set environment variable before install pipeline tools. You have to ge
 the variable and, it is possible to add credentials of Sonarqube, JFrog and Nexus after installation. It means those
 credential should be updated with valid value after install the tools.
 
+**Windows Tip**
+
+If docker and podman installed on the machine, then make sure podman is stopped and docker is running and make sure
+docker installation path was added to system path.
+
+```shell
+podman machine stop
+bcdedit /set hypervisorlaunchtype auto
+DockerCli -SwitchDaemon
+```
+
 ```dotenv
 GITHUB_USERNAME=???
 GITHUB_EMAIL=???
-GITHUB_JENKINS_TOKEN=not_generated
-GITHUB_PACKAGE_TOKEN=not_generated
+GITHUB_JENKINS_TOKEN=???
+GITHUB_PACKAGE_TOKEN=???
 GITHUB_ARTIFACTORY_URL=oss-community/pine-core-java
 
 DOCKER_USERNAME=???
@@ -967,22 +978,22 @@ CONCOURSE_TSA_HOST=pine-concourse-web:2222
 ```
 
 ```shell
-docker build -t samanalishiri/jenkins:latest ./docker/jenkins/ --no-cache
+./docker-volume-mapping.sh
+./docker-dev-env.sh
+#./docker-build-images.sh
+./concourse-dev-env.sh
+
+docker compose --file docker-compose.yml --project-name dev-env --env-file .env up --build -d
 ```
 
-```shell
-./docker-pre-config.sh
-./docker-create-env.sh
-./concourse-generate-credentials.sh
+### Sonar
 
-docker compose --file docker-compose.yml --project-name pine-pipeline --env-file .env up --build -d
-```
+* default username: admin
+* default password: admin
+* Login and change the default password to 'password'
+* Generate Sonar token
 
 ```shell
-# default username: admin
-# default password: admin
-# Login and change the default password to 'password'
-# Get Sonar token
 SONAR_URL=http://localhost:9000
 SONAR_USERNAME=admin
 SONAR_PASSWORD=password
@@ -990,25 +1001,34 @@ SONAR_TOKEN=$(curl -u $SONAR_USERNAME:$SONAR_PASSWORD -X POST "$SONAR_URL/api/us
 echo $SONAR_TOKEN | jq
 ```
 
+### JFrog
+
+* default username: admin
+* default password: password
+* Login and keep the default password to 'password'
+* Get JFrog encrypted password
+* Create maven repository with `pine` prefix via Web UI in OSS version.
+
 ```shell
-# default username: admin
-# default password: admin
-# Login and keep the default password as 'password'
-# Get JFrog password
 ARTIFACTORY_URL=http://localhost:8082/artifactory
 REPO_KEY=pine
 JFROG_USERNAME=admin
 JFROG_PASSWORD=password
-JFROG_ENC_PASSWORD=$(curl -u $JFROG_USERNAME:$JFROG_PASSWORD -X GET "$ARTIFACTORY_URL/api/security/encryptedPassword")
-echo JFROG_ENC_PASSWORD
+JFROG_ENCRYPTED_PASSWORD=$(curl -u $JFROG_USERNAME:$JFROG_PASSWORD -X GET "$ARTIFACTORY_URL/api/security/encryptedPassword")
+echo JFROG_ENCRYPTED_PASSWORD
 
 ```
 
+### Nexus
+
+* default username: admin
+* default password: Obtain Nexus password
+* Login and change the default password to 'password'
+* Create Repository
+
 ```shell
-# Get Nexus password
 NEXUS_PASSWORD=$(cat ./ci/docker_compose/nexus/admin.password)
 echo $NEXUS_PASSWORD
-# Login and change the  default password to 'password'
 ```
 
 ```shell
@@ -1033,75 +1053,51 @@ curl -u $USERNAME:$PASSWORD -X POST "$NEXUS_URL/service/rest/v1/repositories/mav
   }
 }'
 
-curl -u $USERNAME:$PASSWORD -X GET "$NEXUS_URL/service/rest/v1/repositories/$REPO_NAME"
-
 ```
 
+### Jenkins
+
+* default username: admin
+* default password: Obtain Jenkins password
+* Login and change the default password to 'password'
+* Generate first API token via Web UI
+
 ```shell
-# Get Jenkins password 
 JENKINS_PASSWORD=$(cat ./ci/docker_compose/jenkins/secrets/initialAdminPassword)
 echo $JENKINS_PASSWORD
-# Login and change the  default password to 'password'
 ```
 
 ```shell
-JENKINS_URL=http://localhost:8080
-JENKINS_USER=admin
-JENKINS_PASSWORD=password
-curl  -s -u $JENKINS_USER:$JENKINS_PASSWORD -X GET "$JENKINS_URL/credentials/store/system/domain/_/api/json?depth=1" | jq
-```
-
-```shell
-JENKINS_URL=http://localhost:8080
-JENKINS_USER=admin
-JENKINS_PASSWORD=password
-
-curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq
-```
-
-```shell
-JENKINS_URL=http://localhost:8080
-JENKINS_USER=admin
-JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
-CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
-curl -s -u $JENKINS_USER:$JENKINS_PASSWORD -H "Jenkins-Crumb:$CRUMB" -X POST "$JENKINS_URL/me/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?newTokenName=admin_token" | jq
-```
-
-```shell
-JENKINS_URL=http://localhost:8080
-JENKINS_USER=admin
-JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
-CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
-API_TOKEN=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD -H "Jenkins-Crumb:$CRUMB" -X POST "$JENKINS_URL/me/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?newTokenName=admin_token" | jq -r '.data.tokenValue' | tr -d '\r')
-```
-
-```shell
-GITHUB_USERNAME=samanalishiri
-GITHUB_EMAIL=samanalishiri@gmail.com
-GITHUB_JENKINS_TOKEN=not_generated
-GITHUB_PACKAGE_TOKEN=not_generated
+GITHUB_USERNAME=???
+GITHUB_EMAIL=???
+GITHUB_JENKINS_TOKEN=???
+GITHUB_PACKAGE_TOKEN=???
 GITHUB_ARTIFACTORY_URL=oss-community/pine-core-java
-SONAR_TOKEN=not_generated
+
+SONAR_TOKEN=???
 SONAR_URL=http://pine-sonarqube:9000
+
 JFROG_ARTIFACTORY_USERNAME=admin
-JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD=not_generated
+JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD=???
 JFROG_ARTIFACTORY_SNAPSHOT_URL=http://pine-jfrog:8081/artifactory/pine-libs-snapshot
 JFROG_ARTIFACTORY_RELEASE_URL=http://pine-jfrog:8081/artifactory/pine-libs-release
 JFROG_ARTIFACTORY_CONTEXT_URL=http://pine-jfrog:8082/artifactory
 JFROG_ARTIFACTORY_REPOSITORY_PREFIX=pine
+
 NEXUS_ARTIFACTORY_USERNAME=admin
-NEXUS_ARTIFACTORY_PASSWORD=not_generated
+NEXUS_ARTIFACTORY_PASSWORD=???
 NEXUS_ARTIFACTORY_HOST_URL=http://pine-nexus:8081/
 NEXUS_ARTIFACTORY_SNAPSHOT_URL=http://pine-nexus:8081/repository/pine-maven-snapshots/
 NEXUS_ARTIFACTORY_RELEASE_URL=http://pine-nexus:8081/repository/pine-maven-releases/
 
 JENKINS_URL=http://localhost:8080
 JENKINS_USER=admin
-JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
-CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+JENKINS_API_TOKEN=???
+
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_API_TOKEN "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1114,7 +1110,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1127,7 +1123,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1140,7 +1136,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1152,7 +1148,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
         }
     }'
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1165,7 +1161,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1178,7 +1174,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1191,7 +1187,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1204,7 +1200,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1218,7 +1214,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
 
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1231,7 +1227,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1244,7 +1240,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1257,7 +1253,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1270,7 +1266,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1283,7 +1279,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1296,7 +1292,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1308,7 +1304,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
         }
     }'
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1321,7 +1317,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     }'
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
-    -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+    -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
     -H "Jenkins-Crumb:$CRUMB" \
     --data-urlencode 'json={
         "credentials": {
@@ -1338,139 +1334,94 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
 ```shell
 JENKINS_URL=http://localhost:8080
 JENKINS_USER=admin
-JENKINS_PASSWORD=1141e94ed3709a4f739b23af1ea45ab0ae
+JENKINS_API_TOKEN=???
 
-CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_PASSWORD "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_API_TOKEN "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_USERNAME/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_EMAIL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_JENKINS_TOKEN/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_PACKAGE_TOKEN/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_ARTIFACTORY_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/SONAR_TOKEN/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/SONAR_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_USERNAME/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_SNAPSHOT_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_RELEASE_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_CONTEXT_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/JFROG_ARTIFACTORY_REPOSITORY_PREFIX/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_USERNAME/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_PASSWORD/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_HOST_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_SNAPSHOT_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/NEXUS_ARTIFACTORY_RELEASE_URL/doDelete" \
-  -u "$JENKINS_USER:$JENKINS_PASSWORD" \
+  -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
 ```
 
-Then executed `pipeline-install` file that located in root path of project.
-
-#### Windows
-
-If docker and podman installed on the machine, then make sure podman is stopped and docker is running and make sure
-docker installation path was added to system path.
-
 ```shell
-podman machine stop
-bcdedit /set hypervisorlaunchtype auto
-DockerCli -SwitchDaemon
-```
-
-Then execute the following bat file.
-
-```shell
-.\pipeline-install.bat
-```
-
-#### Linux
-
-```shell
-./pipeline-install.sh
+# Generate more api tokens
+JENKINS_URL=http://localhost:8080
+JENKINS_USER=admin
+JENKINS_API_TOKEN=???
+CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_API_TOKEN "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
+curl -s -u $JENKINS_USER:$JENKINS_API_TOKEN -H "Jenkins-Crumb:$CRUMB" -X POST "$JENKINS_URL/me/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?newTokenName=admin_token" | jq
 ```
 
 ### Setup Pipeline Tools
-
-Go to the Sonar console `http://localhost:9000` and follow the instruction [SonarQube](#SonarQube) to generate token.
-<br/>
-Go to the JFrog console `http://localhost:8082/ui` and follow the instruction [JFrog](#JFrog) to get encrypted password.
-And create repositories with pine as a prefix.
-<br/>
-Go to the Nexus console `http://localhost:8084` and add create two repositories named `pine-maven-snapshots` and
-`pine-maven-releases`.
-<br/>
-Go to the Jenkins console `http://localhost:8080` and add the following secret variables to invoke by `credentials()`.
-<br/>
-
-* github_username
-* github_email
-* github_jenkins_token
-* github_package_token
-* github_artifactory_url
-* sonar_token
-* sonar_url
-* jfrog_artifactory_username
-* jfrog_artifactory_encrypted_password
-* jfrog_artifactory_snapshot_url
-* jfrog_artifactory_context_url
-* jfrog_artifactory_repository_prefix
-* nexus-artifactory-username
-* nexus-artifactory-password
-* nexus-artifactory-host-url
-* nexus-artifactory-snapshot-url
-* nexus-artifactory-release-url
 
 <p align="justify">
 
@@ -1522,7 +1473,7 @@ Replace not_generated values with valid value in Concourse credentials file.
 
 ```shell
 fly --target pine login --team-name main --concourse-url http://localhost:8083 -u pine -p pine
-fly --target pine set-pipeline --pipeline pine --config .\ci\concourse\pipeline.yml --load-vars-from .\ci\concourse\credentials.yml
+fly --target pine set-pipeline --pipeline pine --config ./ci/concourse/pipeline.yml --load-vars-from ./ci/concourse/credentials.yml
 fly -t pine unpause-pipeline -p pine
 ```
 
