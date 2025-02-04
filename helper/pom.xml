@@ -41,12 +41,12 @@ limitations under the License.
     <licenses>
         <license>
             <name>Apache License</name>
-            <url>${source.repository.url}/blob/main/LICENSE</url>
+            <url>${scm.base-url.https}/blob/main/LICENSE</url>
             <distribution>repo</distribution>
         </license>
         <license>
             <name>Notice</name>
-            <url>${source.repository.url}/blob/main/NOTICE</url>
+            <url>${scm.base-url.https}/blob/main/NOTICE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -107,7 +107,7 @@ limitations under the License.
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>2.0.0</version>
+                <version>2.4.0</version>
                 <configuration>
                     <excludedScopes>test</excludedScopes>
                 </configuration>

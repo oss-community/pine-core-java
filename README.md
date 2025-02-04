@@ -902,7 +902,7 @@ mvn scm-publish:publish-scm -s settings.xml -P site,github
 Also, you can see maven site [locally](http://localhost:8000/).
 
 ``` shell
-mvn site:run -s settings.xml -P site
+mvn site:run -s settings.xml -P site,javadoc,changelog,test-report,github
 ```
 
 ## <span style="color: Crimson">Install</span>
