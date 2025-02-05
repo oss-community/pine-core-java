@@ -82,9 +82,9 @@ limitations under the License.
         <url>${scm.base-url.https}/issues</url>
     </issueManagement>
     <scm>
-        <connection>scm:git:https://github.com/oss-community/pine-core-java.git</connection>
+        <connection>scm:git:git://github.com/oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/oss-community/pine-core-java.git</developerConnection>
-        <url>https://github.com/oss-community/pine-core-java/tree/main</url>
+        <url>https://github.com/oss-community/pine-core-java</url>
         <tag>HEAD</tag>
     </scm>
     <modules>
@@ -460,6 +460,10 @@ limitations under the License.
                         <reportSets>
                             <reportSet>
                                 <id>aggregated-unit-test-report</id>
+                                <configuration>
+                                    <outputDirectory>${project.reporting.outputDirectory}/test-reports/ut
+                                    </outputDirectory>
+                                </configuration>
                                 <reports>
                                     <report>report-only</report>
                                 </reports>
@@ -499,7 +503,6 @@ limitations under the License.
                                     <report>dependency-info</report>
                                     <report>dependency-management</report>
                                     <report>distribution-management</report>
-                                    <report>help</report>
                                     <report>index</report>
                                     <report>issue-management</report>
                                     <report>licenses</report>
@@ -616,9 +619,9 @@ limitations under the License.
         <profile>
             <id>nexus</id>
             <properties>
-                <nexus.artifactory.host.url>${env.NEXUS_ARTIFACTORY_HOST_URL}</nexus.artifactory.host.url>
-                <nexus.artifactory.snapshot.url>${env.NEXUS_ARTIFACTORY_SNAPSHOT_URL}</nexus.artifactory.snapshot.url>
-                <nexus.artifactory.release.url>${env.NEXUS_ARTIFACTORY_RELEASE_URL}</nexus.artifactory.release.url>
+                <nexus.artifactory.host.url>${env.NEXUS_ARTIFACTORY_HOST_URL}/</nexus.artifactory.host.url>
+                <nexus.artifactory.snapshot.url>${env.NEXUS_ARTIFACTORY_SNAPSHOT_URL}/</nexus.artifactory.snapshot.url>
+                <nexus.artifactory.release.url>${env.NEXUS_ARTIFACTORY_RELEASE_URL}/</nexus.artifactory.release.url>
             </properties>
             <distributionManagement>
                 <snapshotRepository>
