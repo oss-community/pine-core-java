@@ -1,13 +1,13 @@
 groups:
-  - name: dev
+  - name: development
     jobs:
-      - dev-pine-core-java
-  - name: uat
+      - dev
+  - name: user_acceptance_testing
     jobs:
-      - uat-pine-core-java
-  - name: prod
+      - uat
+  - name: production
     jobs:
-      - prod-pine-core-java
+      - prod
 
 resources:
   - name: repo
@@ -19,7 +19,7 @@ resources:
       private_key: ((GITHUB_KEY))
 
 jobs:
-  - name: dev-pine-core-java
+  - name: dev
     plan:
       - get: repo
         trigger: true
@@ -48,10 +48,10 @@ jobs:
                 mvn -f repo/pom.xml validate
                 mvn -f repo/pom.xml clean package -DskipTests=true -s repo/settings.xml -P source,javadoc,license
                 mvn -f repo/pom.xml test -s repo/settings.xml
-  - name: uat-pine-core-java
+  - name: uat
     plan:
       - get: repo
-        passed: [ dev-pine-core-java ]
+        passed: [ dev ]
       - task: build
         privileged: true
         config:
@@ -99,10 +99,10 @@ jobs:
                 mvn -f repo/pom.xml install -DskipTests=true -s repo/settings.xml
                 mvn -f repo/pom.xml site:site site:stage -s repo/settings.xml -P site,javadoc,changelog,test-report,github
                 mvn -f repo/pom.xml scm-publish:publish-scm -s repo/settings.xml -P site,github
-  - name: prod-pine-core-java
+  - name: prod
     plan:
       - get: repo
-        passed: [ uat-pine-core-java ]
+        passed: [ uat ]
       - task: build
         privileged: true
         config:

@@ -1,9 +1,9 @@
 name: dev-env
 services:
-  pine-sonarqube-db:
+  sonarqube-db:
     image: postgres
-    container_name: pine-sonarqube-db
-    hostname: pine-sonarqube-db
+    container_name: sonarqube-db
+    hostname: sonarqube-db
     restart: always
     environment:
       POSTGRES_DB: ${SONAR_DB}
@@ -18,10 +18,10 @@ services:
       nofile:
         soft: 32000
         hard: 40000
-  pine-jfrog-db:
+  jfrog-db:
     image: postgres
-    container_name: pine-jfrog-db
-    hostname: pine-jfrog-db
+    container_name: jfrog-db
+    hostname: jfrog-db
     restart: always
     environment:
       POSTGRES_DB: ${JFROG_DB}
@@ -39,9 +39,9 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-  pine-concourse-db:
-    container_name: pine-concourse-db
-    hostname: pine-concourse-db
+  concourse-db:
+    container_name: concourse-db
+    hostname: concourse-db
     restart: always
     image: postgres
     environment:
@@ -58,9 +58,9 @@ services:
       nofile:
         soft: 32000
         hard: 40000
-  pine-jenkins:
-    container_name: pine-jenkins
-    hostname: pine-jenkins
+  jenkins:
+    container_name: jenkins
+    hostname: jenkins
     restart: always
     build:
       context: docker/jenkins
@@ -90,10 +90,10 @@ services:
   # wsl -d docker-desktop
   # sysctl -w vm.max_map_count=262144
   # set vm.max_map_count=262144 in /etc/sysctl.conf then execute sysctl -p
-  pine-sonarqube:
+  sonarqube:
     image: sonarqube:lts-community
-    container_name: pine-sonarqube
-    hostname: pine-sonarqube
+    container_name: sonarqube
+    hostname: sonarqube
     privileged: true
     restart: always
     environment:
@@ -108,9 +108,9 @@ services:
       - ./ci/docker_compose/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
       - ./ci/docker_compose/sonarqube/sonarqube_logs:/opt/sonarqube/logs
     depends_on:
-      - pine-sonarqube-db
+      - sonarqube-db
     links:
-      - pine-sonarqube-db
+      - sonarqube-db
     ulimits:
       nproc: 262144
       memlock:
@@ -119,10 +119,10 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-  pine-jfrog:
+  jfrog:
     image: docker.bintray.io/jfrog/artifactory-oss
-    container_name: pine-jfrog
-    hostname: pine-jfrog
+    container_name: jfrog
+    hostname: jfrog
     restart: always
     environment:
       JF_SHARED_DATABASE_TYPE: ${JF_SHARED_DATABASE_TYPE}
@@ -134,9 +134,9 @@ services:
       - "8082:8082"
       - "8081:8081"
     depends_on:
-      - pine-jfrog-db
+      - jfrog-db
     links:
-      - pine-jfrog-db
+      - jfrog-db
     ulimits:
       nproc: 262144
       memlock:
@@ -145,10 +145,10 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-  pine-nexus:
+  nexus:
     image: sonatype/nexus3:latest
-    container_name: pine-nexus
-    hostname: pine-nexus
+    container_name: nexus
+    hostname: nexus
     restart: always
     ports:
       - "8084:8081"
@@ -162,14 +162,14 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-  pine-concourse-web:
+  concourse-web:
     image: concourse/concourse
-    container_name: pine-concourse-web
-    hostname: pine-concourse-web
+    container_name: concourse-web
+    hostname: concourse-web
     restart: always
     command: web
     privileged: true
-    depends_on: [ pine-concourse-db ]
+    depends_on: [ concourse-db ]
     ports: [ "8083:8080" ]
     volumes:
       - ./ci/concourse/keys:/keys
@@ -186,14 +186,14 @@ services:
       CONCOURSE_SESSION_SIGNING_KEY: /keys/session_signing_key
       CONCOURSE_TSA_HOST_KEY: /keys/tsa_host_key
       CONCOURSE_TSA_AUTHORIZED_KEYS: ./keys/authorized_worker_keys
-  pine-concourse-worker:
+  concourse-worker:
     image: concourse/concourse
-    container_name: pine-concourse-worker
-    hostname: pine-concourse-worker
+    container_name: concourse-worker
+    hostname: concourse-worker
     restart: always
     command: worker
     privileged: true
-    depends_on: [ pine-concourse-web ]
+    depends_on: [ concourse-web ]
     volumes:
       - ./ci/concourse/keys:/keys
     environment:

@@ -22,17 +22,18 @@ limitations under the License.
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
+    <url>https://github.com/oss-community/pine-core-java</url>
     <description>
         The core module is included abstract and utility modules. It provides abstractions, contracts, helpers and
         utils for end modules to get integrity, clean architecture and extendability.
     </description>
     <properties>
         <!--maven config-->
-        <encoding>UTF-8</encoding>
-        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-        <project.resources.sourceEncoding>${encoding}</project.resources.sourceEncoding>
-        <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
-        <archtype.encoding>${encoding}</archtype.encoding>
+        <app.encoding>UTF-8</app.encoding>
+        <project.build.sourceEncoding>${app.encoding}</project.build.sourceEncoding>
+        <project.resources.sourceEncoding>${app.encoding}</project.resources.sourceEncoding>
+        <project.reporting.outputEncoding>${app.encoding}</project.reporting.outputEncoding>
+        <archtype.encoding>${app.encoding}</archtype.encoding>
         <maven.compiler.version>3.9.0</maven.compiler.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -459,10 +460,6 @@ limitations under the License.
                         <reportSets>
                             <reportSet>
                                 <id>aggregated-unit-test-report</id>
-                                <configuration>
-                                    <outputDirectory>${project.reporting.outputDirectory}/test-reports/ut
-                                    </outputDirectory>
-                                </configuration>
                                 <reports>
                                     <report>report-only</report>
                                 </reports>
@@ -481,7 +478,6 @@ limitations under the License.
                         <artifactId>maven-site-plugin</artifactId>
                         <version>3.21.0</version>
                         <configuration>
-                            <locale>en</locale>
                             <port>8000</port>
                             <tempWebappDirectory>${project.build.directory}/staging</tempWebappDirectory>
                         </configuration>
@@ -608,7 +604,7 @@ limitations under the License.
             <distributionManagement>
                 <site>
                     <id>github.com</id>
-                    <url>${project.scm.connection}</url>
+                    <url>${project.scm.url}</url>
                 </site>
                 <repository>
                     <id>github</id>
@@ -620,9 +616,9 @@ limitations under the License.
         <profile>
             <id>nexus</id>
             <properties>
-                <nexus.artifactory.host.url>${env.NEXUS_ARTIFACTORY_HOST_URL}/</nexus.artifactory.host.url>
-                <nexus.artifactory.snapshot.url>${env.NEXUS_ARTIFACTORY_SNAPSHOT_URL}/</nexus.artifactory.snapshot.url>
-                <nexus.artifactory.release.url>${env.NEXUS_ARTIFACTORY_RELEASE_URL}/</nexus.artifactory.release.url>
+                <nexus.artifactory.host.url>${env.NEXUS_ARTIFACTORY_HOST_URL}</nexus.artifactory.host.url>
+                <nexus.artifactory.snapshot.url>${env.NEXUS_ARTIFACTORY_SNAPSHOT_URL}</nexus.artifactory.snapshot.url>
+                <nexus.artifactory.release.url>${env.NEXUS_ARTIFACTORY_RELEASE_URL}</nexus.artifactory.release.url>
             </properties>
             <distributionManagement>
                 <snapshotRepository>
