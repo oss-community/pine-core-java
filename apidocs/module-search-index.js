@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"core.java.helper"}];updateSearchResults();
+moduleSearchIndex = [{"l":"core.java.datamodel"},{"l":"core.java.helper"}];updateSearchResults();

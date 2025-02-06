@@ -1,3 +1,15 @@
+module:core.java.datamodel
+com.pineframework.core.datamodel.enums
+com.pineframework.core.datamodel.exception
+com.pineframework.core.datamodel.filter
+com.pineframework.core.datamodel.model
+com.pineframework.core.datamodel.paging
+com.pineframework.core.datamodel.persistence
+com.pineframework.core.datamodel.select
+com.pineframework.core.datamodel.serializing
+com.pineframework.core.datamodel.sort
+com.pineframework.core.datamodel.utils
+com.pineframework.core.datamodel.validation
 module:core.java.helper
 com.pineframework.core.helper
 com.pineframework.core.helper.validator
