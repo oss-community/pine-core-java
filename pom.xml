@@ -82,7 +82,7 @@ limitations under the License.
         <url>${scm.base-url.https}/issues</url>
     </issueManagement>
     <scm>
-        <connection>scm:git:git://github.com/oss-community/pine-core-java.git</connection>
+        <connection>scm:git:https://github.com/oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
         <tag>HEAD</tag>
@@ -614,14 +614,18 @@ limitations under the License.
                     <name>GitHub Packages</name>
                     <url>https://maven.pkg.github.com/${github.artifactory.url}</url>
                 </repository>
+                <snapshotRepository>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/${github.artifactory.url}</url>
+                </snapshotRepository>
             </distributionManagement>
         </profile>
         <profile>
             <id>nexus</id>
             <properties>
-                <nexus.artifactory.host.url>${env.NEXUS_ARTIFACTORY_HOST_URL}/</nexus.artifactory.host.url>
-                <nexus.artifactory.snapshot.url>${env.NEXUS_ARTIFACTORY_SNAPSHOT_URL}/</nexus.artifactory.snapshot.url>
-                <nexus.artifactory.release.url>${env.NEXUS_ARTIFACTORY_RELEASE_URL}/</nexus.artifactory.release.url>
+                <nexus.artifactory.host.url>${env.NEXUS_ARTIFACTORY_HOST_URL}</nexus.artifactory.host.url>
+                <nexus.artifactory.snapshot.url>${env.NEXUS_ARTIFACTORY_SNAPSHOT_URL}</nexus.artifactory.snapshot.url>
+                <nexus.artifactory.release.url>${env.NEXUS_ARTIFACTORY_RELEASE_URL}</nexus.artifactory.release.url>
             </properties>
             <distributionManagement>
                 <snapshotRepository>
