@@ -78,7 +78,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: '1024M'
+          memory: '2048M'
+          cpus: 2.0
     ulimits:
       nproc: 262144
       memlock:
