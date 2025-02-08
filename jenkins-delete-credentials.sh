@@ -1,9 +1,8 @@
-
 #!/bin/bash
 
-JENKINS_URL=http://localhost:8080
-JENKINS_USER=admin
-JENKINS_API_TOKEN=$(jenkinstoken)
+JENKINS_URL=$(cat ./secrets/jenkinsurl)
+JENKINS_USER=$(cat ./secrets/jenkinsuser)
+JENKINS_API_TOKEN=$(cat ./secrets/jenkinstoken)
 
 CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_API_TOKEN "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
 
@@ -23,7 +22,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GI
   -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 
-curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_JENKINS_USERNAME_PASSWORD/doDelete" \
+curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/credential/GITHUB_REPOSITORY_USERNAME_PASSWORD/doDelete" \
   -u "$JENKINS_USER:$JENKINS_API_TOKEN" \
   -H "Jenkins-Crumb:$CRUMB"
 

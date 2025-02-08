@@ -82,7 +82,7 @@ curl -s -v -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredent
     --data-urlencode 'json={
         "credentials": {
             "scope": "GLOBAL",
-            "id": "GITHUB_JENKINS_USERNAME_PASSWORD",
+            "id": "GITHUB_REPOSITORY_USERNAME_PASSWORD",
             "username": "'"$GITHUB_USERNAME"'",
             "password": "'"$GITHUB_REPOSITORY_ACCESS_TOKEN"'",
             "description": "Added via Rest API",

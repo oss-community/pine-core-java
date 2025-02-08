@@ -23,7 +23,7 @@ create_secret "Docker username" "dockerusername" "samanalishiri"
 
 # Sonar Variables
 create_secret "Sonar token" "sonartoken" "***"
-create_secret "Sonar URL" "sonarurl" "http://sonar:9000"
+create_secret "Sonar URL" "sonarurl" "http://sonarqube:9000"
 create_secret "Sonar database" "sonardb" "sonar"
 create_secret "Sonar database user" "sonardbuser" "sonar_user"
 create_secret "Sonar database password" "sonardbpassword" "sonar_pass"
