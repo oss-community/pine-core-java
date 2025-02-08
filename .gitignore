@@ -31,6 +31,7 @@ target
 .env*
 .mvn.env*
 .jenkins.env*
+.concourse.env*
 .DS_Store
 
 ci/concourse/credentials.yml

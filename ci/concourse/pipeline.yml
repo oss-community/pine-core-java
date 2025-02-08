@@ -30,7 +30,7 @@ jobs:
           image_resource:
             type: registry-image
             source:
-              repository: $DOCKER_USERNAME/openjdk17
+              repository: ((DOCKER_USERNAME))/openjdk17
               tag: latest
           caches:
             - path: $HOME/.m2/repository
@@ -38,8 +38,6 @@ jobs:
             - name: repo
           outputs:
             - name: artifact
-          params:
-            DOCKER_USERNAME: ((DOCKER_USERNAME))
           run:
             path: sh
             args:
@@ -59,7 +57,7 @@ jobs:
           image_resource:
             type: registry-image
             source:
-              repository: $DOCKER_USERNAME/openjdk17
+              repository: ((DOCKER_USERNAME))/openjdk17
               tag: latest
           caches:
             - path: $HOME/.m2/repository
@@ -68,7 +66,6 @@ jobs:
           outputs:
             - name: artifact
           params:
-            DOCKER_USERNAME: ((DOCKER_USERNAME))
             GITHUB_USERNAME: ((GITHUB_USERNAME))
             GITHUB_EMAIL: ((GITHUB_EMAIL))
             PRIVKEY: ((GITHUB_KEY))
@@ -110,7 +107,7 @@ jobs:
           image_resource:
             type: registry-image
             source:
-              repository: $DOCKER_USERNAME/openjdk17
+              repository: ((DOCKER_USERNAME))/openjdk17
               tag: latest
           caches:
             - path: $HOME/.m2/repository
@@ -119,7 +116,6 @@ jobs:
           outputs:
             - name: artifact
           params:
-            DOCKER_USERNAME: ((DOCKER_USERNAME))
             PRIVKEY: ((GITHUB_KEY))
             PUBKEY: ((GITHUB_KEY_PUB))
             GITHUB_USERNAME: ((GITHUB_USERNAME))
@@ -129,7 +125,7 @@ jobs:
             SONAR_TOKEN: ((SONAR_TOKEN))
             SONAR_URL: ((SONAR_URL))
             JFROG_ARTIFACTORY_USERNAME: ((JFROG_ARTIFACTORY_USERNAME))
-            JFROG_ARTIFACTORY_PASSWORD: ((JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD))
+            JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD: ((JFROG_ARTIFACTORY_ENCRYPTED_PASSWORD))
             JFROG_ARTIFACTORY_SNAPSHOT_URL: ((JFROG_ARTIFACTORY_SNAPSHOT_URL))
             JFROG_ARTIFACTORY_RELEASE_URL: ((JFROG_ARTIFACTORY_RELEASE_URL))
             JFROG_ARTIFACTORY_CONTEXT_URL: ((JFROG_ARTIFACTORY_CONTEXT_URL))
@@ -168,4 +164,4 @@ jobs:
                 mvn -f repo/pom.xml sonar:sonar -s repo/settings.xml -P sonar
                 mvn -f repo/pom.xml deploy -s repo/settings.xml -P jfrog
                 mvn -f repo/pom.xml deploy -s repo/settings.xml -P github
-                mvn -f repo/pom.xml deploy -s settings.xml -P nexus -DskipTests=true
+                mvn -f repo/pom.xml deploy -s repo/settings.xml -P nexus -DskipTests=true

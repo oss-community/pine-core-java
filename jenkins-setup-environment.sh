@@ -73,7 +73,5 @@ mkdir -p ./ci/docker_compose/jenkins \
 || true
 
 docker build -t $DOCKER_USERNAME/jenkins:latest ./docker/jenkins/ --no-cache
-docker build -t $DOCKER_USERNAME/openjdk17:latest ./docker/openjdk17/ --no-cache
-docker build -t $DOCKER_USERNAME/pine-alpine:latest ./docker/pinealpine/ --no-cache
 
 docker compose --file jenkins-docker-compose.yml --project-name jenkins-dev --env-file .jenkins.env.dev up --build -d

@@ -24,6 +24,7 @@ create_secret "Docker username" "dockerusername" "samanalishiri"
 # Sonar Variables
 create_secret "Sonar token" "sonartoken" "***"
 create_secret "Sonar URL" "sonarurl" "http://sonarqube:9000"
+create_secret "Sonar URL for localhost" "sonarurlforlocalhost" "http://localhost:9000"
 create_secret "Sonar database" "sonardb" "sonar"
 create_secret "Sonar database user" "sonardbuser" "sonar_user"
 create_secret "Sonar database password" "sonardbpassword" "sonar_pass"
@@ -35,6 +36,7 @@ create_secret "JFrog token" "jfrogtoken" "***"
 create_secret "JFrog Artifactory snapshot URL" "jfrogartifactorysnapshoturl" "http://jfrog:8081/artifactory/pine-libs-snapshot"
 create_secret "JFrog Artifactory release URL" "jfrogartifactoryreleaseurl" "http://jfrog:8081/artifactory/pine-libs-release"
 create_secret "JFrog Artifactory context URL" "jfrogartifactorycontexturl" "http://jfrog:8082/artifactory"
+create_secret "JFrog Artifactory context URL for localhost" "jfrogartifactorycontexturlforlocalhost" "http://localhost:8082/artifactory"
 create_secret "JFrog Artifactory repository prefix" "jfrogartifactoryrepositoryprefix" "pine"
 create_secret "JFrog database" "jfrogdb" "artifactory"
 create_secret "JFrog database user" "jfrogdbuser" "artifactory_user"
@@ -47,6 +49,7 @@ create_secret "JFrog shared database URL" "jfshareddatabaseurl" "jdbc:postgresql
 create_secret "Nexus Artifactory username" "nexusartifactoryusername" "admin"
 create_secret "Nexus token" "nexustoken" "***"
 create_secret "Nexus Artifactory host URL" "nexusartifactoryhosturl" "http://nexus:8081"
+create_secret "Nexus Artifactory host URL for localhost" "nexusartifactoryhosturlforlocalhost" "http://localhost:8084"
 create_secret "Nexus Artifactory snapshot URL" "nexusartifactorysnapshoturl" "http://nexus:8081/repository/maven-snapshots"
 create_secret "Nexus Artifactory release URL" "nexusartifactoryreleaseurl" "http://nexus:8081/repository/maven-releases"
 
@@ -62,9 +65,3 @@ create_secret "Concourse local user" "concourseaddlocaluser" "pine"
 create_secret "Concourse local user password" "concourseaddlocalpassword" "pine"
 create_secret "Concourse main team local user" "concoursemainteamlocaluser" "pine"
 create_secret "Concourse TSA host" "concoursetsa" "concourse-web:2222"
-
-# Jenkins Variables
-create_secret "Jenkins URL" "jenkinsurl" "http://localhost:8080"
-create_secret "Jenkins user" "jenkinsuser" "admin"
-create_secret "Jenkins API token" "jenkinstoken" "***"
-
