@@ -29,10 +29,10 @@ echo github_key_pub: >> ./ci/concourse/credentials.yml
 echo github_key: '|' >> ./ci/concourse/credentials.yml
 
 mkdir -p ./ci/concourse/keys
-echo $GITHUB_JENKINS_TOKEN > githubtoken
+echo $GITHUB_REPOSITORY_ACCESS_TOKEN > githubrepositoryaccesstoken
 
 ssh-keygen -t rsa -C "concourse_team" -f ./ci/concourse/keys/pipeline
-gh auth login -p ssh -h github.com --with-token < githubtoken
+gh auth login -p ssh -h github.com --with-token < githubrepositoryaccesstoken
 gh repo deploy-key add ./ci/concourse/keys/pipeline.pub -R $GITHUB_ARTIFACTORY_URL -t concourse_team-key-pub -w
 
 ssh-keygen -t rsa -b 4096 -m PEM -f ./ci/concourse/keys/session_signing_key

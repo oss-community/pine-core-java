@@ -1,8 +1,8 @@
 #!/bin/bash
 
 docker-volume-mapping.sh
-docker-dev-env.sh
+docker-dev.sh
 docker-build-images.sh
-concourse-dev-env.sh
+concourse-dev.sh
 
-docker compose --file docker-compose.yml --project-name dev-env --env-file .env up --build -d
+docker compose --file docker-compose.yml --project-name dev --env-file .env up --build -d

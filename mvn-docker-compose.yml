@@ -1,0 +1,116 @@
+name: mvn-dev
+services:
+  sonarqube-db:
+    image: postgres
+    container_name: sonarqube-db
+    hostname: sonarqube-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${SONAR_DB}
+      POSTGRES_USER: ${SONAR_DB_USER}
+      POSTGRES_PASSWORD: ${SONAR_DB_PASSWORD}
+    ports:
+      - "5051:5432"
+#    volumes:
+#      - ./ci/docker_compose/sonarqube-postgresql:/var/lib/postgresql
+    ulimits:
+      nproc: 262144
+      nofile:
+        soft: 32000
+        hard: 40000
+  # wsl -d docker-desktop
+  # sysctl -w vm.max_map_count=262144
+  # set vm.max_map_count=262144 in /etc/sysctl.conf then execute `sysctl -p`
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: sonarqube
+    hostname: sonarqube
+    privileged: true
+    restart: always
+    environment:
+      SONAR_JDBC_URL: ${SONAR_JDBC_URL}
+      SONAR_JDBC_USERNAME: ${SONAR_DB_USER}
+      SONAR_JDBC_PASSWORD: ${SONAR_DB_PASSWORD}
+      SONAR_SEARCH_JAVAADDITIONALOPTS: "-Dbootstrap.system_call_filter=false"
+    ports:
+      - "9000:9000"
+#    volumes:
+#      - ./ci/docker_compose/sonarqube/sonarqube_data:/opt/sonarqube/data
+#      - ./ci/docker_compose/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
+#      - ./ci/docker_compose/sonarqube/sonarqube_logs:/opt/sonarqube/logs
+    depends_on:
+      - sonarqube-db
+    links:
+      - sonarqube-db
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  jfrog-db:
+    image: postgres
+    container_name: jfrog-db
+    hostname: jfrog-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${JFROG_DB}
+      POSTGRES_USER: ${JFROG_DB_USER}
+      POSTGRES_PASSWORD: ${JFROG_DB_PASSWORD}
+    ports:
+      - "5052:5432"
+#    volumes:
+#      - ./ci/docker_compose/jfrog-postgresql:/var/lib/postgresql
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  jfrog:
+    image: docker.bintray.io/jfrog/artifactory-oss
+    container_name: jfrog
+    hostname: jfrog
+    restart: always
+    environment:
+      JF_SHARED_DATABASE_TYPE: ${JF_SHARED_DATABASE_TYPE}
+      JF_SHARED_DATABASE_DRIVER: ${JF_SHARED_DATABASE_DRIVER}
+      JF_SHARED_DATABASE_URL: ${JF_SHARED_DATABASE_URL}
+      JF_SHARED_DATABASE_USERNAME: ${JFROG_DB_USER}
+      JF_SHARED_DATABASE_PASSWORD: ${JFROG_DB_PASSWORD}
+    ports:
+      - "8082:8082"
+      - "8081:8081"
+    depends_on:
+      - jfrog-db
+    links:
+      - jfrog-db
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  nexus:
+    image: sonatype/nexus3:latest
+    container_name: nexus
+    hostname: nexus
+    restart: always
+    ports:
+      - "8084:8081"
+    volumes:
+      - ./ci/docker_compose/nexus:/opt/sonatype/sonatype-work/nexus3
+    ulimits:
+      nproc: 262144
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
