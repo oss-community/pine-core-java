@@ -33,10 +33,6 @@
             <password>${env.GITHUB_PACKAGE_TOKEN}</password>
         </server>
         <server>
-            <id>github-ssh</id>
-            <privateKey>~/.ssh/id_rsa</privateKey>
-        </server>
-        <server>
             <id>nexus-snapshots</id>
             <username>${env.NEXUS_ARTIFACTORY_USERNAME}</username>
             <password>${env.NEXUS_ARTIFACTORY_PASSWORD}</password>
