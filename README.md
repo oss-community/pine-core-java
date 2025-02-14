@@ -229,7 +229,7 @@ source ./concourse-run-pipeline.sh
 ### Release
 
 ```shell
-mvn -B release:clean release:prepare release:perform -DskipTests=true -P github
+mvn -B release:clean release:prepare release:perform -DskipTests=true -s settings.xml -P github
 ```
 ```shell
 git tag -d 1.0.0
