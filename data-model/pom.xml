@@ -19,11 +19,11 @@ limitations under the License.
     <parent>
         <artifactId>pine-core-java</artifactId>
         <groupId>com.pineframework.core</groupId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.8-SNAPSHOT</version>
     </parent>
     <groupId>com.pineframework.core</groupId>
     <artifactId>data-model</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.8-SNAPSHOT</version>
     <name>Data Model</name>
     <description>
         This module include all objects that hold just data (for example: Bean, Value Object)
