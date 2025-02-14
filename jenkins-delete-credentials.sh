@@ -1,8 +1,8 @@
 #!/bin/bash
 
-JENKINS_URL=$(cat ./secrets/jenkinsurl)
-JENKINS_USER=$(cat ./secrets/jenkinsuser)
-JENKINS_API_TOKEN=$(cat ./secrets/jenkinstoken)
+JENKINS_URL=$(cat ./secrets/JENKINS_URL)
+JENKINS_USER=$(cat ./secrets/JENKINS_USER)
+JENKINS_API_TOKEN=$(cat ./secrets/JENKINS_TOKEN)
 
 CRUMB=$(curl -s -u $JENKINS_USER:$JENKINS_API_TOKEN "$JENKINS_URL/crumbIssuer/api/json" | jq -r '.crumb' | tr -d '\r')
 

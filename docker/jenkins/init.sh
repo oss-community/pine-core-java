@@ -8,8 +8,8 @@ echo "Host *" >> $HOME/.ssh/config
 echo "    StrictHostKeyChecking no" >> $HOME/.ssh/config
 
 if [ $GITHUB_REPOSITORY_ACCESS_TOKEN != "empty" ]; then
-  echo $GITHUB_REPOSITORY_ACCESS_TOKEN > $HOME/.githubrepositoryaccesstoken
-  gh auth login -p ssh -h github.com --with-token < $HOME/.githubrepositoryaccesstoken
+  echo $GITHUB_REPOSITORY_ACCESS_TOKEN > $HOME/.GITHUB_REPOSITORY_ACCESS_TOKEN
+  gh auth login -p ssh -h github.com --with-token < $HOME/.GITHUB_REPOSITORY_ACCESS_TOKEN
   gh repo deploy-key delete repository-access-key-pub -R oss-community/pine-core-java || true
   gh repo deploy-key add $HOME/.ssh/id_rsa.pub -R $GITHUB_URL -t repository-access-key-pub -w
 fi

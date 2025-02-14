@@ -54,3 +54,20 @@ echo "$NEXUS_USERNAME" > ./secrets/NEXUS_ARTIFACTORY_USERNAME
 read -p "Enter new password [default: password]: " nexuspassword
 NEXUS_PASSWORD=${nexuspassword:-password}
 echo "$NEXUS_PASSWORD" > ./secrets/NEXUS_TOKEN
+
+# jenkins
+echo "Jenkins Config"
+echo "Login $(cat ./secrets/JENKINS_URL) and keep/change the default credentials to, for example 'admin/password'"
+echo "Generate first API token via Web UI/Administrator/security"
+echo "default username: admin"
+JENKINS_DEFAULT_PASSWORD=$(cat ./docker_compose/jenkins/secrets/initialAdminPassword)
+echo "default password: $JENKINS_DEFAULT_PASSWORD"
+
+read -p "Enter username [default: admin]: " jenkinsusername
+JENKINS_USERNAME=${jenkinsusername:-admin}
+echo "$JENKINS_USERNAME" > ./secrets/JENKINS_USER
+
+echo "Generate first API token via Web UI/Administrator/security"
+read -p "Enter token [default: no default]: " JENKINS_TOKEN
+JENKINS_TOKEN=$jenkinstoken
+echo "$JENKINS_TOKEN" > ./secrets/JENKINS_TOKEN

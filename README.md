@@ -39,6 +39,10 @@ The framework comprised seven components as follows.
 - Docker
 - Cygwin (Only for Windows users)
 
+### Cygwin
+Add `/bin` under Cygwin installation directory to Windows path.
+Open `/etc/nsswitch.conf` under Cygwin installation directory then add `db_home:  windows`.
+
 ## <span style="color: Crimson">Build</span>
 
 ``` shell
@@ -98,12 +102,19 @@ mvn scm-publish:publish-scm -s settings.xml -P site,github
 
 ```shell
 #!/bin/bash
-source ./mvn-setup-secrets.sh
+# These commands must run ONLY ONCE.
+# Windows tip: All command are runnable in windows git bash except 'gh auth login', indeed this command must run CMD.
+ssh-keygen -t rsa -C "my_pc"
+eval $(ssh-agent)
+ssh-add ~/.ssh/id_rsa
+ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+gh auth login # loging via ssh
+ssh -T git@github.com
 ```
 
 ```shell
 #!/bin/bash
-source ./mvn-setup-environment.sh
+source ./mvn-setup-secrets.sh
 ```
 
 ```shell
@@ -112,23 +123,24 @@ source ./mvn-setup-pipeline.sh
 ```
 
 ```shell
+#!/bin/bash
+source ./mvn-setup-tokens.sh
+```
+
+```shell
 # Windows user: This file must run as administrator
-./set-env.bat
+./mvn-set-env.bat
 ```
 
 ```shell
 #!/bin/bash
-source ./set-env.sh
-```
-```shell
-#!/bin/bash
-# Windows user: Can run via git-bash or CMD and NOT Cygwin
-# It must run ONLY ONCE.
-source ./git-setup.sh
+mvn-source ./mvn-set-env.sh
 ```
 
 ```shell
 #!/bin/bash
+# Close and open IDE to reload OS variables if you want to use IDE console to run this command 
+# windows tip: RestartWindows Console to reload OS variables if you want to use Windows console to run this command
 source ./mvn-run-pipeline.sh
 ```
 
