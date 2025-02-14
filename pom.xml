@@ -19,7 +19,7 @@ limitations under the License.
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -85,7 +85,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>${project.version}</tag>
+        <tag>v-1.0.1</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -268,8 +268,9 @@ limitations under the License.
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <scmCommentPrefix>[Released]</scmCommentPrefix>
+                    <scmCommentPrefix>Released: </scmCommentPrefix>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
+                    <branchName>v-@{project.version}</branchName>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <checkModificationExcludes>
@@ -551,6 +552,7 @@ limitations under the License.
             <distributionManagement>
                 <site>
                     <id>github.com</id>
+                    <name>GitHub Site</name>
                     <url>${project.scm.connection}</url>
                 </site>
                 <repository>
@@ -564,20 +566,20 @@ limitations under the License.
                 </snapshotRepository>
             </distributionManagement>
         </profile>
-        <profile>
-            <id>release</id>
-            <properties>
-                <scm.server.id>github</scm.server.id>
-                <github.artifactory.url>${env.GITHUB_ARTIFACTORY_URL}</github.artifactory.url>
-            </properties>
-            <distributionManagement>
-                <repository>
-                    <id>github</id>
-                    <name>GitHub Release</name>
-                    <url>https://maven.pkg.github.com/${github.artifactory.url}</url>
-                </repository>
-            </distributionManagement>
-        </profile>
+<!--        <profile>-->
+<!--            <id>release</id>-->
+<!--            <properties>-->
+<!--                <scm.server.id>github</scm.server.id>-->
+<!--                <github.artifactory.url>${env.GITHUB_ARTIFACTORY_URL}</github.artifactory.url>-->
+<!--            </properties>-->
+<!--            <distributionManagement>-->
+<!--                <repository>-->
+<!--                    <id>github</id>-->
+<!--                    <name>GitHub Release</name>-->
+<!--                    <url>https://maven.pkg.github.com/${github.artifactory.url}</url>-->
+<!--                </repository>-->
+<!--            </distributionManagement>-->
+<!--        </profile>-->
         <profile>
             <id>jfrog</id>
             <properties>
