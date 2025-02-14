@@ -4,11 +4,11 @@
     <parent>
         <artifactId>pine-core-java</artifactId>
         <groupId>com.pineframework.core</groupId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.7</version>
     </parent>
     <groupId>com.pineframework.core</groupId>
     <artifactId>i18n</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.7</version>
     <packaging>jar</packaging>
     <name>I18N</name>
     <description>
