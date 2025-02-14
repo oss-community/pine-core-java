@@ -19,7 +19,7 @@ limitations under the License.
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -85,7 +85,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>HEAD</tag>
+        <tag>v-1.0.0</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -268,7 +268,7 @@ limitations under the License.
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <scmCommentPrefix>[ci skip]</scmCommentPrefix>
+                    <scmCommentPrefix>[Released]</scmCommentPrefix>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -567,13 +567,13 @@ limitations under the License.
         <profile>
             <id>release</id>
             <properties>
-                <scm.server.id>github-ssh</scm.server.id>
+                <scm.server.id>github</scm.server.id>
             </properties>
             <distributionManagement>
                 <repository>
-                    <id>github-ssh</id>
+                    <id>github</id>
                     <name>GitHub Release</name>
-                    <url>https://github.com/oss-community/pine-core-java.git</url>
+                    <url>https://github.com/oss-community/pine-core-java</url>
                 </repository>
             </distributionManagement>
         </profile>
