@@ -270,8 +270,10 @@ limitations under the License.
                 <configuration>
                     <scmCommentPrefix>Released: </scmCommentPrefix>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
-<!--                    <branchName>v-${project.version}</branchName>-->
-<!--                    <releaseLabel>v-${project.version}</releaseLabel>-->
+                    <branchName>release</branchName>
+                    <updateBranchVersions>true</updateBranchVersions>
+                    <releaseVersion>${project.version}</releaseVersion>
+                    <releaseLabel>${project.artifactId}-${project.version}</releaseLabel>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <checkModificationExcludes>
