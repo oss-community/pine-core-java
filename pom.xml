@@ -19,7 +19,7 @@ limitations under the License.
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -47,6 +47,7 @@ limitations under the License.
         <junit.version>5.8.2</junit.version>
 
         <!--SCM config-->
+        <scm.server.id>github</scm.server.id>
         <scm.base-url.https>https://github.com/oss-community/pine-core-java</scm.base-url.https>
         <scm.base-url.ssh>git@github.com:oss-community/pine-core-java.git</scm.base-url.ssh>
     </properties>
@@ -84,7 +85,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>HEAD</tag>
+        <tag>v-1.0.0</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -267,6 +268,7 @@ limitations under the License.
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
+                    <serverId>${scm.server.id}</serverId>
                     <scmCommentPrefix>[ci skip]</scmCommentPrefix>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
                     <useReleaseProfile>false</useReleaseProfile>
@@ -544,6 +546,7 @@ limitations under the License.
         <profile>
             <id>github</id>
             <properties>
+                <scm.server.id>github</scm.server.id>
                 <github.artifactory.url>${env.GITHUB_ARTIFACTORY_URL}</github.artifactory.url>
             </properties>
             <distributionManagement>
@@ -554,7 +557,7 @@ limitations under the License.
                 <repository>
                     <id>github</id>
                     <name>GitHub Packages</name>
-                    <url>${scm.url}</url>
+                    <url>https://maven.pkg.github.com/${github.artifactory.url}</url>
                 </repository>
                 <snapshotRepository>
                     <id>github</id>
@@ -565,15 +568,8 @@ limitations under the License.
         <profile>
             <id>release</id>
             <properties>
-                <github.artifactory.url>${env.GITHUB_ARTIFACTORY_URL}</github.artifactory.url>
+                <scm.server.id>github-ssh</scm.server.id>
             </properties>
-            <distributionManagement>
-                <repository>
-                    <id>github-ssh</id>
-                    <name>GitHub Packages</name>
-                    <url>${scm.base-url.https}</url>
-                </repository>
-            </distributionManagement>
         </profile>
         <profile>
             <id>jfrog</id>
