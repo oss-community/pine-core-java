@@ -268,7 +268,7 @@ limitations under the License.
                 <version>3.0.1</version>
                 <configuration>
                     <scmCommentPrefix>[ci skip]</scmCommentPrefix>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <tagNameFormat>v-@{project.version}</tagNameFormat>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
@@ -566,7 +566,7 @@ limitations under the License.
                 <repository>
                     <id>github-ssh</id>
                     <name>GitHub Packages</name>
-                    <url>${scm.connection}</url>
+                    <url>git@github.com:${github.artifactory.url}.git</url>
                 </repository>
             </distributionManagement>
         </profile>
