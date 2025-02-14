@@ -216,8 +216,6 @@ source ./concourse-set-ev.sh
 source ./concourse-run-pipeline.sh
 ```
 
-#### <p align="center"> [Top](#Pine-Core-Framework) </p>
-
 ### Release
 
 ```shell
@@ -228,3 +226,5 @@ git tag -d 1.0.0
 git push --delete origin 1.0.0
 mvn release:rollback
 ```
+
+## <p align="center"> [Top](#Pine-Core-Framework) </p>
