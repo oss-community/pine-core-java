@@ -170,23 +170,23 @@ source ./jenkins-setup-secrets.sh
 
 ```shell
 #!/bin/bash
-source ./jenkins-setup-environment.sh
-```
-
-```shell
-#!/bin/bash
 source ./jenkins-setup-pipeline.sh
 ```
 
 ```shell
 #!/bin/bash
-source ./jenkins-add-credentials.sh
+source ./jenkins-setup-token.sh
+```
+
+```shell
+#!/bin/bash
+source ./jenkins-set-env.sh
 ```
 
 ```shell
 #!/bin/bash
 # Only if you need to reset the credentials then delete all of them at first
-source ./jenkins-delete-credentials.sh
+source ./jenkins-delete-ev.sh
 ```
 
 ### <span style="color: RoyalBlue">Concourse Pipeline</span>
@@ -198,22 +198,22 @@ source ./concourse-setup-secrets.sh
 
 ```shell
 #!/bin/bash
-source ./concourse-setup-environment.sh
-```
-
-```shell
-#!/bin/bash
 source ./concourse-setup-pipeline.sh
 ```
 
 ```shell
 #!/bin/bash
-source ./concourse-add-credentials.sh
+source ./concourse-setup-tokens.sh
 ```
 
 ```shell
 #!/bin/bash
-source ./concourse-add-pipeline.sh
+source ./concourse-set-ev.sh
+```
+
+```shell
+#!/bin/bash
+source ./concourse-run-pipeline.sh
 ```
 
 #### <p align="center"> [Top](#Pine-Core-Framework) </p>

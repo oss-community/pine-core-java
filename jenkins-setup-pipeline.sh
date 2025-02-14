@@ -33,34 +33,34 @@ JENKINS_URL=$(cat ./secrets/JENKINS_URL) # http://jenkins:8080
 JENKINS_USER=$(cat ./secrets/JENKINS_USER) # admin
 JENKINS_API_TOKEN=$(cat ./secrets/JENKINS_TOKEN)
 
-echo "#ENV" > ./.jenkins.env.dev
-echo DOCKER_USERNAME=$DOCKER_USERNAME >> ./.jenkins.env.dev
-echo GITHUB_USERNAME=$GITHUB_USERNAME >> ./.jenkins.env.dev
-echo GITHUB_EMAIL=$GITHUB_EMAIL >> ./.jenkins.env.dev
-echo GITHUB_REPOSITORY_ACCESS_TOKEN=$GITHUB_REPOSITORY_ACCESS_TOKEN >> ./.jenkins.env.dev
-echo GITHUB_PACKAGE_TOKEN=$GITHUB_PACKAGE_TOKEN >> ./.jenkins.env.dev
-echo GITHUB_ARTIFACTORY_URL=$GITHUB_ARTIFACTORY_URL >> ./.jenkins.env.dev
-echo SONAR_DB=$SONAR_DB >> ./.jenkins.env.dev
-echo SONAR_DB_USER=$SONAR_DB_USER >> ./.jenkins.env.dev
-echo SONAR_DB_PASSWORD=$SONAR_DB_PASSWORD >> ./.jenkins.env.dev
-echo SONAR_JDBC_URL=$SONAR_JDBC_URL >> ./.jenkins.env.dev
-echo JFROG_DB=$JFROG_DB >> ./.jenkins.env.dev
-echo JFROG_DB_USER=$JFROG_DB_USER >> ./.jenkins.env.dev
-echo JFROG_DB_PASSWORD=$JFROG_DB_PASSWORD >> ./.jenkins.env.dev
-echo JF_SHARED_DATABASE_TYPE=$JF_SHARED_DATABASE_TYPE >> ./.jenkins.env.dev
-echo JF_SHARED_DATABASE_DRIVER=$JF_SHARED_DATABASE_DRIVER >> ./.jenkins.env.dev
-echo JF_SHARED_DATABASE_URL=$JF_SHARED_DATABASE_URL >> ./.jenkins.env.dev
-echo CONCOURSE_DB=$CONCOURSE_DB >> ./.jenkins.env.dev
-echo CONCOURSE_DB_HOST=CONCOURSE_DB_HOST >> ./.jenkins.env.dev
-echo CONCOURSE_DB_PORT=$CONCOURSE_DB_PORT >> ./.jenkins.env.dev
-echo CONCOURSE_DB_USER=$CONCOURSE_DB_USER >> ./.jenkins.env.dev
-echo CONCOURSE_DB_PASSWORD=$CONCOURSE_DB_PASSWORD >> ./.jenkins.env.dev
-echo CONCOURSE_EXTERNAL_URL=$CONCOURSE_EXTERNAL_URL >> ./.jenkins.env.dev
-echo CONCOURSE_CLUSTER_NAME=$CONCOURSE_CLUSTER_NAME >> ./.jenkins.env.dev
-echo CONCOURSE_ADD_LOCAL_USER=$CONCOURSE_ADD_LOCAL_USER >> ./.jenkins.env.dev
-echo CONCOURSE_ADD_LOCAL_PASSWORD=$CONCOURSE_ADD_LOCAL_PASSWORD >> ./.jenkins.env.dev
-echo CONCOURSE_MAIN_TEAM_LOCAL_USER=$CONCOURSE_MAIN_TEAM_LOCAL_USER >> ./.jenkins.env.dev
-echo CONCOURSE_TSA_HOST=$CONCOURSE_TSA_HOST >> ./.jenkins.env.dev
+echo "#ENV" > ./.env.dev.jenkins
+echo DOCKER_USERNAME=$DOCKER_USERNAME >> ./.env.dev.jenkins
+echo GITHUB_USERNAME=$GITHUB_USERNAME >> ./.env.dev.jenkins
+echo GITHUB_EMAIL=$GITHUB_EMAIL >> ./.env.dev.jenkins
+echo GITHUB_REPOSITORY_ACCESS_TOKEN=$GITHUB_REPOSITORY_ACCESS_TOKEN >> ./.env.dev.jenkins
+echo GITHUB_PACKAGE_TOKEN=$GITHUB_PACKAGE_TOKEN >> ./.env.dev.jenkins
+echo GITHUB_ARTIFACTORY_URL=$GITHUB_ARTIFACTORY_URL >> ./.env.dev.jenkins
+echo SONAR_DB=$SONAR_DB >> ./.env.dev.jenkins
+echo SONAR_DB_USER=$SONAR_DB_USER >> ./.env.dev.jenkins
+echo SONAR_DB_PASSWORD=$SONAR_DB_PASSWORD >> ./.env.dev.jenkins
+echo SONAR_JDBC_URL=$SONAR_JDBC_URL >> ./.env.dev.jenkins
+echo JFROG_DB=$JFROG_DB >> ./.env.dev.jenkins
+echo JFROG_DB_USER=$JFROG_DB_USER >> ./.env.dev.jenkins
+echo JFROG_DB_PASSWORD=$JFROG_DB_PASSWORD >> ./.env.dev.jenkins
+echo JF_SHARED_DATABASE_TYPE=$JF_SHARED_DATABASE_TYPE >> ./.env.dev.jenkins
+echo JF_SHARED_DATABASE_DRIVER=$JF_SHARED_DATABASE_DRIVER >> ./.env.dev.jenkins
+echo JF_SHARED_DATABASE_URL=$JF_SHARED_DATABASE_URL >> ./.env.dev.jenkins
+echo CONCOURSE_DB=$CONCOURSE_DB >> ./.env.dev.jenkins
+echo CONCOURSE_DB_HOST=CONCOURSE_DB_HOST >> ./.env.dev.jenkins
+echo CONCOURSE_DB_PORT=$CONCOURSE_DB_PORT >> ./.env.dev.jenkins
+echo CONCOURSE_DB_USER=$CONCOURSE_DB_USER >> ./.env.dev.jenkins
+echo CONCOURSE_DB_PASSWORD=$CONCOURSE_DB_PASSWORD >> ./.env.dev.jenkins
+echo CONCOURSE_EXTERNAL_URL=$CONCOURSE_EXTERNAL_URL >> ./.env.dev.jenkins
+echo CONCOURSE_CLUSTER_NAME=$CONCOURSE_CLUSTER_NAME >> ./.env.dev.jenkins
+echo CONCOURSE_ADD_LOCAL_USER=$CONCOURSE_ADD_LOCAL_USER >> ./.env.dev.jenkins
+echo CONCOURSE_ADD_LOCAL_PASSWORD=$CONCOURSE_ADD_LOCAL_PASSWORD >> ./.env.dev.jenkins
+echo CONCOURSE_MAIN_TEAM_LOCAL_USER=$CONCOURSE_MAIN_TEAM_LOCAL_USER >> ./.env.dev.jenkins
+echo CONCOURSE_TSA_HOST=$CONCOURSE_TSA_HOST >> ./.env.dev.jenkins
 
 mkdir -p ./docker_compose/jenkins \
 ./docker_compose/jfrog-postgresql \
@@ -74,4 +74,4 @@ mkdir -p ./docker_compose/jenkins \
 
 docker build -t $DOCKER_USERNAME/jenkins:latest ./docker/jenkins/ --no-cache
 
-docker compose --file jenkins-docker-compose.yml --project-name jenkins-dev --env-file .jenkins.env.dev up --build -d
+docker compose --file jenkins-docker-compose.yml --project-name jenkins-dev --env-file .env.dev.jenkins up --build -d

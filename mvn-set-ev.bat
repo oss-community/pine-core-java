@@ -159,3 +159,5 @@ echo ============================
 echo JENKINS_URL=%JENKINS_URL%
 echo JENKINS_USER=%JENKINS_USER%
 echo JENKINS_API_TOKEN=%JENKINS_API_TOKEN%
+
+pause
