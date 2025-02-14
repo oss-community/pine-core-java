@@ -217,3 +217,14 @@ source ./concourse-run-pipeline.sh
 ```
 
 #### <p align="center"> [Top](#Pine-Core-Framework) </p>
+
+### Release
+
+```shell
+mvn -B release:clean release:prepare release:perform -P github -DskipTests=true
+```
+```shell
+git tag -d 1.0.0
+git push --delete origin 1.0.0
+mvn release:rollback
+```
