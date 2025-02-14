@@ -96,7 +96,17 @@ mvn scm-publish:publish-scm -s settings.xml -P site,github
 ## <span style="color: Crimson">Pipeline</span>
 
 * Generate a GitHub token to access the repository
+  * repo
+  * read:org
+  * write:public_key
 * Generate a GitHub token for deploying packages to GitHub package.
+  * repo
+  * workflow
+  * write:packages
+  * read:packages
+  * delete:packages
+  * admin:public_key
+  * admin:repo_hook
 
 ### <span style="color: RoyalBlue">Maven</span>
 
