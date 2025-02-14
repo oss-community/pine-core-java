@@ -31,7 +31,10 @@
             <id>github</id>
             <username>${env.GITHUB_USERNAME}</username>
             <password>${env.GITHUB_PACKAGE_TOKEN}</password>
-            <privateKey>~/.ssh/github_brunosouzas</privateKey>
+        </server>
+        <server>
+            <id>github-ssh</id>
+            <privateKey>~/.ssh/id_rsa</privateKey>
         </server>
         <server>
             <id>nexus-snapshots</id>
