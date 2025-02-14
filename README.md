@@ -50,7 +50,7 @@ mvn validate
 mvn clean package -DskipTests=true -s settings.xml -P source,javadoc,license
 mvn test -s settings.xml
 mvn checkstyle:check -s settings.xml -P checkstyle
-mvn clean install -DskipTests=true
+mvn clean install -DskipTests=true -s settings.xml
 mvn site:site site:stage -s settings.xml -P site,javadoc,changelog,test-report,github
 ```
 
@@ -221,7 +221,7 @@ source ./concourse-run-pipeline.sh
 ### Release
 
 ```shell
-mvn -B release:clean release:prepare release:perform -P github -DskipTests=true
+mvn -B release:clean release:prepare release:perform  -s settings.xml -P github -DskipTests=true
 ```
 ```shell
 git tag -d 1.0.0
