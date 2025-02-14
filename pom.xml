@@ -566,12 +566,8 @@ limitations under the License.
                 <repository>
                     <id>github-ssh</id>
                     <name>GitHub Packages</name>
-                    <url>https://maven.pkg.github.com/${github.artifactory.url}</url>
+                    <url>${scm.connection}</url>
                 </repository>
-                <snapshotRepository>
-                    <id>github-ssh</id>
-                    <url>https://maven.pkg.github.com/${github.artifactory.url}</url>
-                </snapshotRepository>
             </distributionManagement>
         </profile>
         <profile>
