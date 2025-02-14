@@ -19,7 +19,7 @@ limitations under the License.
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -271,7 +271,7 @@ limitations under the License.
                     <scmCommentPrefix>Released: </scmCommentPrefix>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
                     <branchName>v-${project.version}</branchName>
-                    <releaseLabel>v-@{project.version}</releaseLabel>
+                    <releaseLabel>v-${project.version}</releaseLabel>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <checkModificationExcludes>
