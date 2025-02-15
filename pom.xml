@@ -19,7 +19,7 @@ limitations under the License.
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -50,6 +50,7 @@ limitations under the License.
         <scm.server.id>github</scm.server.id>
         <scm.base-url.https>https://github.com/oss-community/pine-core-java</scm.base-url.https>
         <scm.base-url.ssh>git@github.com:oss-community/pine-core-java.git</scm.base-url.ssh>
+        <project.release.version>${parsed.majorVersion}.${parsed.minorVersion}.${parsed.incrementalVersion}</project.release.version>
     </properties>
     <developers>
         <developer>
@@ -85,7 +86,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>HEAD</tag>
+        <tag>v-${parsed.majorVersion}.${parsed.minorVersion}.${parsed.incrementalVersion}</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -270,17 +271,13 @@ limitations under the License.
                 <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>project-release-version-variable</id>
-                        <phase>initialize</phase>
+                        <id>extract-release-version</id>
                         <goals>
-                            <goal>regex-property</goal>
+                            <goal>parse-version</goal>
                         </goals>
+                        <phase>initialize</phase>
                         <configuration>
-                            <name>project.release.version</name>
-                            <value>${project.version}</value>
-                            <regex>-SNAPSHOT</regex>
-                            <replacement />
-                            <failIfNoMatch>false</failIfNoMatch>
+                            <propertyPrefix>parsed</propertyPrefix>
                         </configuration>
                     </execution>
                 </executions>
