@@ -229,11 +229,10 @@ source ./concourse-run-pipeline.sh
 ### Release
 
 ```shell
+mvn validate
 mvn -B release:clean release:prepare release:perform release:branch -DskipTests=true -s settings.xml -P release
 ```
 ```shell
-git tag -d v-1.0.0
-git push --delete origin v-1.0.0
 mvn release:rollback
 ```
 

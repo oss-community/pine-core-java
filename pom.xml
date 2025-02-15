@@ -50,8 +50,7 @@ limitations under the License.
         <scm.server.id>github</scm.server.id>
         <scm.base-url.https>https://github.com/oss-community/pine-core-java</scm.base-url.https>
         <scm.base-url.ssh>git@github.com:oss-community/pine-core-java.git</scm.base-url.ssh>
-
-<!--        <clean.project.version>${project.version}</clean.project.version>-->
+        <clean.project.version>${project.version}</clean.project.version>
     </properties>
     <developers>
         <developer>
@@ -87,7 +86,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>v-${clean.project.version}</tag>
+        <tag>HEAD</tag>
     </scm>
     <modules>
         <module>helper</module>
