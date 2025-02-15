@@ -19,7 +19,7 @@ limitations under the License.
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -51,7 +51,7 @@ limitations under the License.
         <scm.base-url.https>https://github.com/oss-community/pine-core-java</scm.base-url.https>
         <scm.base-url.ssh>git@github.com:oss-community/pine-core-java.git</scm.base-url.ssh>
 
-        <version.number />
+        <project.release.version />
     </properties>
     <developers>
         <developer>
@@ -87,7 +87,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>HEAD</tag>
+        <tag>v-</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -272,13 +272,13 @@ limitations under the License.
                 <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>rename-property</id>
-                        <phase>validate</phase>
+                        <id>project-release-version-variable</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>regex-property</goal>
                         </goals>
                         <configuration>
-                            <name>version.number</name>
+                            <name>project.release.version</name>
                             <value>${project.version}</value>
                             <regex>-SNAPSHOT</regex>
                             <replacement />
@@ -292,7 +292,7 @@ limitations under the License.
                 <version>3.0.1</version>
                 <configuration>
                     <scmCommentPrefix>Released:</scmCommentPrefix>
-                    <tag>v-${version.number}</tag>
+                    <tag>v-${project.release.version}</tag>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <checkModificationExcludes>
