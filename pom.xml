@@ -50,7 +50,6 @@ limitations under the License.
         <scm.server.id>github</scm.server.id>
         <scm.base-url.https>https://github.com/oss-community/pine-core-java</scm.base-url.https>
         <scm.base-url.ssh>git@github.com:oss-community/pine-core-java.git</scm.base-url.ssh>
-        <project.release.version>${project.version}</project.release.version>
     </properties>
     <developers>
         <developer>
@@ -86,7 +85,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>v-1.0.0-SNAPSHOT</tag>
+        <tag>HEAD</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -266,47 +265,11 @@ limitations under the License.
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <id>extract-release-version</id>
-                        <goals>
-                            <goal>parse-version</goal>
-                        </goals>
-                        <phase>validate</phase>
-                        <configuration>
-                            <propertyPrefix>parsed</propertyPrefix>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>set-system-properties</goal>
-                        </goals>
-                        <configuration>
-                            <properties>
-                                <project.release.version>${parsed.majorVersion}.${parsed.minorVersion}.${parsed.incrementalVersion}</project.release.version>
-                            </properties>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
                     <scmCommentPrefix>Released:</scmCommentPrefix>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
-                    <branchName>v-${project.release.version}</branchName>
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <checkModificationExcludes>
