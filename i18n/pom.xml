@@ -4,7 +4,7 @@
     <parent>
         <artifactId>pine-core-java</artifactId>
         <groupId>com.pineframework.core</groupId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <groupId>com.pineframework.core</groupId>
     <artifactId>i18n</artifactId>
