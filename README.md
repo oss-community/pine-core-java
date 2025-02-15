@@ -229,6 +229,7 @@ source ./concourse-run-pipeline.sh
 ### Release
 
 ```shell
+mvn clean package
 mvn -B release:clean release:prepare release:perform -DskipTests=true -s settings.xml -P release
 ```
 ```shell
