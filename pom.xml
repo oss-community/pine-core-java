@@ -14,13 +14,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pineframework.core</groupId>
     <artifactId>pine-core-java</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.9</version>
     <packaging>pom</packaging>
     <name>Pine Core Java</name>
     <url>https://github.com/oss-community/pine-core-java</url>
@@ -51,7 +50,7 @@ limitations under the License.
         <scm.server.id>github</scm.server.id>
         <scm.base-url.https>https://github.com/oss-community/pine-core-java</scm.base-url.https>
         <scm.base-url.ssh>git@github.com:oss-community/pine-core-java.git</scm.base-url.ssh>
-        <clean.project.version></clean.project.version>
+        <clean.project.version />
     </properties>
     <developers>
         <developer>
@@ -87,7 +86,7 @@ limitations under the License.
         <connection>scm:git:git@github.com:oss-community/pine-core-java.git</connection>
         <developerConnection>scm:git:git@github.com:oss-community/pine-core-java.git</developerConnection>
         <url>https://github.com/oss-community/pine-core-java</url>
-        <tag>HEAD</tag>
+        <tag>v-1.0.9</tag>
     </scm>
     <modules>
         <module>helper</module>
@@ -272,15 +271,20 @@ limitations under the License.
                 <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>regex-property</id>
+                        <id>regex-properties</id>
                         <goals>
-                            <goal>regex-property</goal>
+                            <goal>regex-properties</goal>
                         </goals>
                         <configuration>
-                            <name>clean.project.version</name>
-                            <value>${project.version}</value>
-                            <regex>-SNAPSHOT</regex>
-                            <replacement></replacement>
+                            <regexPropertySettings>
+                                <regexPropertySetting>
+                                    <name>clean.project.version</name>
+                                    <value>${project.version}</value>
+                                    <regex>-SNAPSHOT</regex>
+                                    <replacement />
+                                    <failIfNoMatch>false</failIfNoMatch>
+                                </regexPropertySetting>
+                            </regexPropertySettings>
                         </configuration>
                     </execution>
                 </executions>
