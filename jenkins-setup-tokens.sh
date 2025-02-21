@@ -68,6 +68,6 @@ JENKINS_USERNAME=${jenkinsusername:-admin}
 echo "$JENKINS_USERNAME" > ./secrets/JENKINS_USER
 
 echo "Generate first API token via Web UI/Administrator/security"
-read -p "Enter token [default: no default]: " JENKINS_TOKEN
+read -p "Enter token [default: no default]: " jenkinstoken
 JENKINS_TOKEN=$jenkinstoken
 echo "$JENKINS_TOKEN" > ./secrets/JENKINS_TOKEN

@@ -144,7 +144,7 @@ source ./mvn-setup-tokens.sh
 
 ```shell
 #!/bin/bash
-mvn-source ./mvn-set-env.sh
+mvn-source ./mvn-set-ev.sh
 ```
 
 ```shell
@@ -163,7 +163,7 @@ source ./mvn-run-pipeline.sh
 5. In the Trigger section check `GitHub hook trigger for GITScm polling` item and insert the url of the project.
 6. In Pipeline section, select `Pipeline script from SCM` as pipeline definition.
     - Select Git as an SCM
-    - Insert URL of repository in HTTPS format
+    - Insert URL of repository in HTTPS format (https://github.com/oss-community/pine-core-java.git)
     - Add credentials (GitHub token as a secret text)
     - Choose branch
     - Insert script path (default is Jenkinsfile) and in this case is in the ci/jenkins directory
@@ -185,12 +185,12 @@ source ./jenkins-setup-pipeline.sh
 
 ```shell
 #!/bin/bash
-source ./jenkins-setup-token.sh
+source ./jenkins-setup-tokens.sh
 ```
 
 ```shell
 #!/bin/bash
-source ./jenkins-set-env.sh
+source ./jenkins-set-ev.sh
 ```
 
 ```shell
