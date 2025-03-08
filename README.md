@@ -108,6 +108,10 @@ mvn scm-publish:publish-scm -s settings.xml -P site,github
   * admin:public_key
   * admin:repo_hook
 
+```shell
+mkdir secrets
+```
+
 ### <span style="color: RoyalBlue">Maven</span>
 
 ```shell
@@ -157,6 +161,8 @@ source ./mvn-run-pipeline.sh
 ### <span style="color: RoyalBlue">Jenkins</span>
 
 1. Add jdk with name 'jdk17', maven named 'maven3' and git with name 'git' under system tools.
+   1. JAVA_HOME=/usr/lib/jvm/java-17-openjdk 
+   2. M2_HOME=/usr/share/java/maven-3
 2. Add secret variables to invoke by `credentials()`.
 3. Click on New Item menu in dashboard of [Jenkins](#Jenkins)
 4. Select Pipeline and then OK.
